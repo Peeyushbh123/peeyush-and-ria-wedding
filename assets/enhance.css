@@ -78,6 +78,64 @@ main div.justify-center.gap-3.py-1 > div.rounded-full { animation: prBob 4.5s ea
 #pr-garland .pr-strand { transform-box: fill-box; transform-origin: 50% 0; animation: prSway var(--sd, 4s) ease-in-out var(--dl, 0s) infinite; }
 @keyframes prSway { 0%, 100% { transform: rotate(-3.2deg); } 50% { transform: rotate(3.2deg); } }
 
+/* ---------- Real web fonts (loaded in <head>) so every phone shows the same design ---------- */
+.font-script { font-family: 'Great Vibes', 'Noto Serif Devanagari', 'Snell Roundhand', 'Brush Script MT', cursive; }
+.font-serif  { font-family: 'Playfair Display', 'Noto Serif Devanagari', 'Iowan Old Style', Georgia, serif; }
+.font-quote  { font-family: 'Cormorant Garamond', 'Noto Serif Devanagari', Baskerville, Georgia, serif; font-size-adjust: .46; }
+.font-sans, .small-caps, .small-caps-dark { font-family: 'Inter', 'Noto Sans Devanagari', system-ui, -apple-system, 'Segoe UI', sans-serif; }
+
+/* ---------- Gate photo fallback: still looks regal if the photo is slow or blocked ---------- */
+#pr-rajasthani-intro .pr-gate-panel { background-color: #3a1220; }
+
+/* ---------- Guest tools: Save the dates / share / RSVP ---------- */
+#pr-guest-tools {
+  position: relative; margin: 28px 0 8px; padding: 26px 18px 20px; border-radius: 22px; overflow: hidden; text-align: center;
+  border: 1px solid rgba(232,213,160,.6); color: #4A1A2A;
+  background: radial-gradient(ellipse 500px 260px at 85% 0%, rgba(212,175,55,.16), transparent 70%), linear-gradient(180deg, #FFFEF9 0%, #FFFBF0 100%);
+  box-shadow: 0 12px 36px rgba(74,26,42,.08);
+}
+#pr-guest-tools::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, #D4AF37, #E8D5A0, #B8952F); }
+.pr-gt-eyebrow { margin: 0 0 10px; font: 600 10px/1 'Inter', sans-serif; letter-spacing: 3.5px; text-transform: uppercase; color: #A08A6A; }
+.pr-gt-title { margin: 0 0 16px; font: 600 22px/1.25 'Playfair Display', 'Noto Serif Devanagari', Georgia, serif; color: #4A1A2A; }
+.pr-gt-list { display: grid; gap: 8px; margin-bottom: 14px; text-align: left; }
+.pr-gt-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 10px 10px 14px; border: 1px solid rgba(232,213,160,.7); border-radius: 14px; background: rgba(255,255,255,.75); }
+.pr-gt-info { min-width: 0; }
+.pr-gt-name { font: 600 14px/1.25 'Inter', 'Noto Sans Devanagari', sans-serif; color: #4A1A2A; }
+.pr-gt-when { margin-top: 3px; font: 500 12px/1.4 'Inter', 'Noto Sans Devanagari', sans-serif; color: #8B7A6B; }
+.pr-gt-actions { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+.pr-gt-actions2 { display: grid; gap: 8px; margin-top: 8px; }
+.pr-btn {
+  appearance: none; -webkit-appearance: none; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  border: 1px solid transparent; border-radius: 999px; padding: 9px 13px; text-decoration: none; text-transform: uppercase;
+  font: 600 10px/1 'Inter', 'Noto Sans Devanagari', sans-serif; letter-spacing: 1.4px; -webkit-tap-highlight-color: transparent;
+  transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
+}
+.pr-btn:active { transform: scale(.97); }
+.pr-btn:focus-visible { outline: 2px solid #D4AF37; outline-offset: 2px; }
+.pr-btn-gold { background: #4A1A2A; color: #FFFEF9; box-shadow: 0 4px 12px rgba(74,26,42,.2); }
+.pr-btn-gold:hover { background: #5A2233; }
+.pr-btn-ghost { background: #FFFBF0; color: #4A1A2A; border-color: #E8D5A0; }
+.pr-btn-ghost:hover { background: #fff; }
+.pr-btn-round { width: 34px; height: 34px; padding: 0; font-size: 13px; letter-spacing: 0; font-family: 'Inter', sans-serif; }
+.pr-btn-block { width: 100%; padding: 14px 18px; font-size: 11px; letter-spacing: 2px; }
+
+#pr-toast {
+  position: fixed; left: 50%; bottom: 26px; z-index: 100002; pointer-events: none; opacity: 0; transform: translate(-50%, 16px);
+  padding: 11px 18px; border-radius: 999px; background: #4A1A2A; color: #FFFBF0; box-shadow: 0 8px 24px rgba(74,26,42,.3);
+  font: 600 12px/1.4 'Inter', 'Noto Sans Devanagari', sans-serif; transition: opacity .3s ease, transform .3s ease;
+}
+#pr-toast.on { opacity: 1; transform: translate(-50%, 0); }
+
+/* ---------- Lite mode: automatically on for low-memory / slow-CPU / data-saver phones ---------- */
+.pr-lite main :is(article, div).group::before { animation: none; --pr-a: 135deg; }
+.pr-lite .font-script { animation: none; background-position: 50% 0; }
+.pr-lite #pr-sparkle-layer { display: none; }
+.pr-lite #romance-atmosphere .romance-petal:nth-child(n+7) { display: none; }
+.pr-lite .cinematic-reveal, .pr-lite .pr-rev { filter: none !important; }
+.pr-lite .backdrop-blur-xl, .pr-lite .backdrop-blur-sm { -webkit-backdrop-filter: none; backdrop-filter: none; }
+.pr-lite #pr-garland svg { filter: none; }
+.pr-lite main article div[class*="bg-[#4A1A2A]"]::after { display: none; }
+
 /* ---------- Canvas for fireworks / trail ---------- */
 #pr-fx { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 100001; pointer-events: none; }
 
