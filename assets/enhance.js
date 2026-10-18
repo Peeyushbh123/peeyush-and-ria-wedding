@@ -1,15 +1,47 @@
-/* Peeyush & Ria — enhancement layer: music, fireworks, tilt, garland, reveals. */
+/* Peeyush & Ria — enhancement layer: music, fireworks, tilt, garland, reveals, guest tools. */
 (function () {
   'use strict';
   if (window.__prEnhance) return;
   window.__prEnhance = true;
 
-  var reduced = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var fine = window.matchMedia && matchMedia('(hover:hover) and (pointer:fine)').matches;
+  /* =============================================================
+     SETTINGS — safe to edit
+     ============================================================= */
   var AUDIO_SRC = 'audio/wedding-music.mp3';
   var VOLUME = 0.55;
 
+  // WhatsApp RSVP button: put a number WITH country code, digits only (e.g. '919876543210').
+  // Leave empty ('') to hide the RSVP button.
+  var RSVP_WHATSAPP = '';
+
+  var VENUE = 'Jharkhand Palace and Resort, Opposite Vinayak City, Sirsi Road, Bindayaka, Jaipur 302041, Rajasthan';
+  var COUPLE = 'Peeyush & Ria';
+  // Times are India time (IST). "mins" is how long the calendar entry lasts (assumed; change freely).
+  var EVENTS = [
+    { id: 'tilak',   en: 'Tilak Ceremony',  hi: 'तिलक समारोह',   d: [2027, 2, 14, 14, 0], mins: 180,
+      whenEn: '14 Feb · 2:00 PM',  whenHi: '14 फरवरी · दोपहर 2:00 बजे' },
+    { id: 'sangeet', en: 'Sangeet Ceremony', hi: 'संगीत समारोह', d: [2027, 2, 14, 19, 0], mins: 270,
+      whenEn: '14 Feb · 7:00 PM',  whenHi: '14 फरवरी · शाम 7:00 बजे' },
+    { id: 'haldi',   en: 'Haldi',           hi: 'हल्दी',         d: [2027, 2, 15, 11, 0], mins: 180,
+      whenEn: '15 Feb · 11:00 AM', whenHi: '15 फरवरी · सुबह 11:00 बजे' },
+    { id: 'mehendi', en: 'Mehendi',         hi: 'मेहँदी',        d: [2027, 2, 15, 19, 0], mins: 240,
+      whenEn: '15 Feb · 7:00 PM',  whenHi: '15 फरवरी · शाम 7:00 बजे' },
+    { id: 'wedding', en: 'Royal Wedding',   hi: 'शुभ विवाह',     d: [2027, 2, 16, 18, 0], mins: 360,
+      whenEn: '16 Feb · 6:00 PM',  whenHi: '16 फरवरी · शाम 6:00 बजे' }
+  ];
+
+  /* ============================================================= */
+
+  var reduced = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var fine = window.matchMedia && matchMedia('(hover:hover) and (pointer:fine)').matches;
+  var lite = !!((navigator.connection && navigator.connection.saveData) ||
+    (navigator.deviceMemory && navigator.deviceMemory <= 3) ||
+    (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4));
+  if (lite) document.documentElement.classList.add('pr-lite');
+
   function $$(sel, root) { return Array.prototype.slice.call((root || document).querySelectorAll(sel)); }
+  function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
 
   /* =============================================================
      MUSIC — starts inside the seal tap (a real user gesture), fades in
@@ -63,6 +95,7 @@
     var ctx = c.getContext('2d');
     var dpr = Math.min(2, window.devicePixelRatio || 1);
     var parts = [], raf = 0;
+    var cap = lite ? 420 : 900;
     var colors = ['#FFD76A', '#D4AF37', '#FFF3C4', '#E8D5A0', '#E07A8F', '#F7B2B7', '#FFFFFF'];
 
     function size() {
@@ -85,7 +118,7 @@
         ctx.globalAlpha = Math.max(0, p.life);
         ctx.strokeStyle = p.color; ctx.lineWidth = p.size; ctx.lineCap = 'round';
         ctx.beginPath(); ctx.moveTo(p.px, p.py); ctx.lineTo(p.x, p.y); ctx.stroke();
-        if (p.life > .5 && Math.random() < .12) {   // twinkle dot
+        if (!lite && p.life > .5 && Math.random() < .12) {   // twinkle dot
           ctx.fillStyle = '#fff8dc'; ctx.fillRect(p.x, p.y, 1.6, 1.6);
         }
       }
@@ -96,7 +129,7 @@
 
     return {
       burst: function (x, y, n, power) {
-        n = n || 56; power = power || 1;
+        n = Math.round((n || 56) * (lite ? .55 : 1)); power = power || 1;
         for (var i = 0; i < n; i++) {
           var a = (Math.PI * 2 * i) / n + Math.random() * .25;
           var s = (1.4 + Math.random() * 3.4) * power;
@@ -104,7 +137,7 @@
             g: .035, fr: .982, life: 1, decay: .011 + Math.random() * .012,
             size: 1.2 + Math.random() * 1.8, color: colors[(Math.random() * colors.length) | 0] });
         }
-        if (parts.length > 900) parts.splice(0, parts.length - 900);
+        if (parts.length > cap) parts.splice(0, parts.length - cap);
         kick();
       },
       spark: function (x, y) {
@@ -129,7 +162,7 @@
      3D TILT + GLARE on cards (desktop pointers)
      ============================================================= */
   function setupTilt() {
-    if (!fine || reduced) return;
+    if (!fine || reduced || lite) return;
     $$('main :is(article, div).group').forEach(function (el) {
       var raf = 0, ev = null;
       function apply() {
@@ -154,7 +187,7 @@
      SCROLL REVEALS — cards slide in from alternating sides
      ============================================================= */
   function setupReveals() {
-    var els = $$('main article.group, main .grid.gap-3 > div.group');
+    var els = $$('main article.group, main .grid.gap-3 > div.group, #pr-guest-tools');
     if (!els.length) return;
     if (reduced || !('IntersectionObserver' in window)) return;
     els.forEach(function (el, i) { el.classList.add('pr-rev', i % 2 ? 'pr-from-r' : 'pr-from-l'); });
@@ -193,11 +226,12 @@
 
   /* =============================================================
      MARIGOLD TORANA — swaying garland across the top once opened
+     (kept short so it never covers the first line of the invitation)
      ============================================================= */
   function buildGarland() {
     if (document.getElementById('pr-garland')) return;
     var NS = 'http://www.w3.org/2000/svg';
-    var W = 430, H = 150, top = 8;
+    var W = 430, H = 108, top = 8;
     var marigold = ['#F59E0B', '#FBBF24', '#EA580C', '#FCD34D'];
     var wrap = document.createElement('div');
     wrap.id = 'pr-garland'; wrap.setAttribute('aria-hidden', 'true');
@@ -218,7 +252,7 @@
     el('path', { d: 'M0 ' + top + ' H' + W, stroke: '#B8952F', 'stroke-width': 3, fill: 'none' });
     el('path', { d: 'M0 ' + (top + 2.5) + ' H' + W, stroke: '#E8D5A0', 'stroke-width': 1, fill: 'none', opacity: .8 });
     // swags
-    var sw = [[0, 144, 38], [144, 286, 46], [286, W, 38]];
+    var sw = [[0, 144, 30], [144, 286, 36], [286, W, 30]];
     sw.forEach(function (s, si) {
       var x0 = s[0], x1 = s[1], dip = s[2], cx = (x0 + x1) / 2;
       var n = 15;
@@ -227,31 +261,29 @@
         var x = u * u * x0 + 2 * u * t * cx + t * t * x1;
         var y = u * u * (top + 3) + 2 * u * t * (top + 3 + dip * 2) + t * t * (top + 3);
         if (i % 3 === 1) el('ellipse', { cx: x, cy: y + 5, rx: 3.2, ry: 6, fill: '#4D7C0F', transform: 'rotate(' + (i * 17 % 50 - 25) + ' ' + x + ' ' + y + ')', opacity: .9 });
-        flower(x, y, 5.4, svg, i + si);
+        flower(x, y, 5.2, svg, i + si);
       }
     });
-    // hanging strands
+    // short hanging strands
     var xs = [26, 70, 118, 168, 215, 262, 312, 360, 404];
     xs.forEach(function (x, idx) {
       var g = el('g', { 'class': 'pr-strand' });
       g.style.setProperty('--sd', (3.4 + (idx % 4) * .6) + 's');
       g.style.setProperty('--dl', (-idx * .45) + 's');
-      var len = 36 + ((idx * 17) % 5) * 9 + (idx % 2 ? 8 : 0);
-      var yTop = top + (idx % 2 ? 36 : 28);                 // starts below the swag, roughly
+      var len = 14 + ((idx * 17) % 5) * 6 + (idx % 2 ? 6 : 0);   // 14 – 44
+      var yTop = top + (idx % 2 ? 30 : 24);
       el('line', { x1: x, y1: top + 3, x2: x, y2: yTop + len, stroke: '#B8952F', 'stroke-width': 1.1 }, g);
-      var count = Math.floor(len / 11);
-      for (var k = 0; k < count; k++) flower(x, yTop + 6 + k * 11, 4.6, g, k + idx);
-      // gold bell / drop
-      el('path', { d: 'M' + (x - 5) + ' ' + (yTop + len) + ' Q' + x + ' ' + (yTop + len + 16) + ' ' + (x + 5) + ' ' + (yTop + len) + ' Z', fill: '#D4AF37', stroke: '#B8952F', 'stroke-width': .8 }, g);
-      el('circle', { cx: x, cy: yTop + len + 12, r: 1.8, fill: '#fff3c4' }, g);
+      var count = Math.max(1, Math.floor(len / 11));
+      for (var k = 0; k < count; k++) flower(x, yTop + 6 + k * 11, 4.4, g, k + idx);
+      el('path', { d: 'M' + (x - 4.5) + ' ' + (yTop + len) + ' Q' + x + ' ' + (yTop + len + 14) + ' ' + (x + 4.5) + ' ' + (yTop + len) + ' Z', fill: '#D4AF37', stroke: '#B8952F', 'stroke-width': .8 }, g);
+      el('circle', { cx: x, cy: yTop + len + 10, r: 1.6, fill: '#fff3c4' }, g);
     });
 
     wrap.appendChild(svg);
     document.body.appendChild(wrap);
 
-    // fade the garland away as the guest scrolls down
     function onScroll() {
-      var k = Math.max(0, 1 - window.scrollY / 280);
+      var k = Math.max(0, 1 - window.scrollY / 220);
       wrap.style.setProperty('--pr-g', k.toFixed(2));
     }
     addEventListener('scroll', onScroll, { passive: true });
@@ -267,10 +299,8 @@
     if (opened) return;
     opened = true;
     if (reduced) return;
-    // golden fireworks explode over the opening gates
-    setTimeout(function () { showStars(5, [.12, .45]); }, 1800);
+    setTimeout(function () { showStars(lite ? 3 : 5, [.12, .45]); }, 1800);
     setTimeout(buildGarland, 3600);
-    // wipe the hero name in once the gates have parted
     setTimeout(function () {
       var h = document.querySelector('main section h2');
       if (h) { h.classList.remove('pr-hero-entrance', 'pr-name-glow'); h.classList.add('pr-wipe'); }
@@ -289,7 +319,7 @@
   function setupPointerFX() {
     if (reduced) return;
     var last = 0;
-    if (fine) {
+    if (fine && !lite) {
       document.addEventListener('pointermove', function (e) {
         var now = performance.now();
         if (now - last < 45 || e.pointerType === 'touch') return;
@@ -304,6 +334,181 @@
   }
 
   /* =============================================================
+     LANGUAGE — remembered between visits, and kept in <html lang>
+     ============================================================= */
+  function isHindi() {
+    var h = document.querySelector('main article h3');
+    return !!h && /[\u0900-\u097F]/.test(h.textContent);
+  }
+
+  var lastLang = 'en';
+  var onLangChange = [];
+  function setupLanguage() {
+    var saved = lsGet('pr-lang');
+    if (saved === 'hi') {
+      var btn = $$('button').filter(function (b) { return /हिंदी/.test(b.textContent); })[0];
+      if (btn) btn.click();
+    }
+    setInterval(function () {
+      var now = isHindi() ? 'hi' : 'en';
+      if (now === lastLang) return;
+      lastLang = now;
+      document.documentElement.lang = now;
+      lsSet('pr-lang', now);
+      onLangChange.forEach(function (fn) { fn(); });
+    }, 400);
+  }
+
+  /* =============================================================
+     GUEST TOOLS — add to calendar, share, optional WhatsApp RSVP
+     ============================================================= */
+  function pad(n) { return (n < 10 ? '0' : '') + n; }
+  function utcStamp(d, addMins) {
+    // d = [y, m, day, hh, mm] in IST  ->  UTC stamp
+    var t = new Date(Date.UTC(d[0], d[1] - 1, d[2], d[3], d[4]) - 330 * 60000 + (addMins || 0) * 60000);
+    return t.getUTCFullYear() + pad(t.getUTCMonth() + 1) + pad(t.getUTCDate()) + 'T' +
+      pad(t.getUTCHours()) + pad(t.getUTCMinutes()) + '00Z';
+  }
+  function localStamp(d, addMins) {
+    var t = new Date(Date.UTC(d[0], d[1] - 1, d[2], d[3], d[4]) + (addMins || 0) * 60000);
+    return t.getUTCFullYear() + pad(t.getUTCMonth() + 1) + pad(t.getUTCDate()) + 'T' +
+      pad(t.getUTCHours()) + pad(t.getUTCMinutes()) + '00';
+  }
+  function icsEsc(s) { return String(s).replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\n/g, '\\n'); }
+
+  function buildICS(list) {
+    var now = new Date();
+    var stamp = now.getUTCFullYear() + pad(now.getUTCMonth() + 1) + pad(now.getUTCDate()) + 'T' +
+      pad(now.getUTCHours()) + pad(now.getUTCMinutes()) + pad(now.getUTCSeconds()) + 'Z';
+    var lines = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Peeyush and Ria Wedding//EN', 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH'];
+    list.forEach(function (ev) {
+      lines.push('BEGIN:VEVENT',
+        'UID:pr-' + ev.id + '-2027@wedding-invitation',
+        'DTSTAMP:' + stamp,
+        'DTSTART:' + utcStamp(ev.d, 0),
+        'DTEND:' + utcStamp(ev.d, ev.mins),
+        'SUMMARY:' + icsEsc(ev.en + ' – ' + COUPLE),
+        'LOCATION:' + icsEsc(VENUE),
+        'DESCRIPTION:' + icsEsc('You are warmly invited to the ' + ev.en + ' of ' + COUPLE + '.'),
+        'BEGIN:VALARM', 'TRIGGER:-P1D', 'ACTION:DISPLAY', 'DESCRIPTION:Tomorrow – ' + icsEsc(ev.en), 'END:VALARM',
+        'BEGIN:VALARM', 'TRIGGER:-PT3H', 'ACTION:DISPLAY', 'DESCRIPTION:' + icsEsc(ev.en) + ' starts in 3 hours', 'END:VALARM',
+        'END:VEVENT');
+    });
+    lines.push('END:VCALENDAR');
+    return lines.join('\r\n');
+  }
+
+  function downloadICS(list, filename) {
+    var blob = new Blob([buildICS(list)], { type: 'text/calendar;charset=utf-8' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url; a.download = filename; a.style.display = 'none';
+    document.body.appendChild(a); a.click();
+    setTimeout(function () { URL.revokeObjectURL(url); a.remove(); }, 1500);
+  }
+
+  function googleLink(ev) {
+    return 'https://calendar.google.com/calendar/render?action=TEMPLATE' +
+      '&text=' + encodeURIComponent(ev.en + ' – ' + COUPLE) +
+      '&dates=' + localStamp(ev.d, 0) + '/' + localStamp(ev.d, ev.mins) +
+      '&ctz=Asia/Kolkata' +
+      '&location=' + encodeURIComponent(VENUE) +
+      '&details=' + encodeURIComponent('You are warmly invited to the ' + ev.en + ' of ' + COUPLE + '.');
+  }
+
+  var toastEl = null, toastTimer = 0;
+  function toast(msg) {
+    if (!toastEl) { toastEl = document.createElement('div'); toastEl.id = 'pr-toast'; toastEl.setAttribute('role', 'status'); document.body.appendChild(toastEl); }
+    toastEl.textContent = msg;
+    toastEl.classList.add('on');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { toastEl.classList.remove('on'); }, 2600);
+  }
+
+  var STR = {
+    eyebrow: ['Save the dates', 'तारीखें सहेजें'],
+    title: ['Add to your calendar', 'अपने कैलेंडर में जोड़ें'],
+    add: ['＋ Add', '＋ जोड़ें'],
+    all: ['Add all 5 events', 'सभी 5 कार्यक्रम जोड़ें'],
+    share: ['Share invitation', 'निमंत्रण साझा करें'],
+    rsvp: ['RSVP on WhatsApp', 'व्हाट्सऐप पर RSVP करें'],
+    copied: ['Link copied', 'लिंक कॉपी हो गया'],
+    addTitle: ['Download calendar file', 'कैलेंडर फ़ाइल डाउनलोड करें'],
+    gTitle: ['Add to Google Calendar', 'Google कैलेंडर में जोड़ें'],
+    shareText: ['You are invited to the wedding of Peeyush & Ria – 14, 15 & 16 February 2027, Jaipur.',
+                'पीयूष और रिया के विवाह में आप सादर आमंत्रित हैं – 14, 15 और 16 फरवरी 2027, जयपुर।'],
+    rsvpText: ['Hello! I will be attending the wedding of Peeyush & Ria.\nName:\nNumber of guests:\nEvents I will attend:',
+               'नमस्ते! मैं पीयूष और रिया के विवाह में शामिल होऊँगा/होऊँगी।\nनाम:\nमेहमानों की संख्या:\nजिन कार्यक्रमों में आऊँगा/आऊँगी:']
+  };
+  function T(key) { return STR[key][isHindi() ? 1 : 0]; }
+
+  function shareInvite() {
+    var url = location.href.split('#')[0];
+    var data = { title: COUPLE + ' – Wedding Invitation', text: T('shareText'), url: url };
+    if (navigator.share) { navigator.share(data).catch(function () {}); return; }
+    var done = function () { toast(T('copied')); };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(data.text + ' ' + url).then(done, done);
+    else done();
+  }
+
+  function mk(tag, cls, text, attrs) {
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text != null) n.textContent = text;
+    if (attrs) for (var k in attrs) n.setAttribute(k, attrs[k]);
+    return n;
+  }
+
+  function renderGuestTools(sec) {
+    var hi = isHindi() ? 1 : 0;
+    sec.textContent = '';
+    sec.appendChild(mk('p', 'pr-gt-eyebrow', T('eyebrow')));
+    sec.appendChild(mk('h3', 'pr-gt-title', T('title')));
+
+    var list = mk('div', 'pr-gt-list');
+    EVENTS.forEach(function (ev) {
+      var row = mk('div', 'pr-gt-row');
+      var info = mk('div', 'pr-gt-info');
+      info.appendChild(mk('div', 'pr-gt-name', hi ? ev.hi : ev.en));
+      info.appendChild(mk('div', 'pr-gt-when', hi ? ev.whenHi : ev.whenEn));
+      var acts = mk('div', 'pr-gt-actions');
+      var add = mk('button', 'pr-btn pr-btn-gold', T('add'), { type: 'button', title: T('addTitle'), 'aria-label': T('addTitle') + ': ' + ev.en });
+      add.addEventListener('click', function () { downloadICS([ev], 'peeyush-ria-' + ev.id + '.ics'); });
+      var g = mk('a', 'pr-btn pr-btn-ghost pr-btn-round', 'G', { href: googleLink(ev), target: '_blank', rel: 'noopener noreferrer', title: T('gTitle'), 'aria-label': T('gTitle') + ': ' + ev.en });
+      acts.appendChild(add); acts.appendChild(g);
+      row.appendChild(info); row.appendChild(acts);
+      list.appendChild(row);
+    });
+    sec.appendChild(list);
+
+    var all = mk('button', 'pr-btn pr-btn-gold pr-btn-block', T('all'), { type: 'button' });
+    all.addEventListener('click', function () { downloadICS(EVENTS, 'peeyush-ria-wedding.ics'); });
+    sec.appendChild(all);
+
+    var row2 = mk('div', 'pr-gt-actions2');
+    var sh = mk('button', 'pr-btn pr-btn-ghost pr-btn-block', '↗ ' + T('share'), { type: 'button' });
+    sh.addEventListener('click', shareInvite);
+    row2.appendChild(sh);
+    if (RSVP_WHATSAPP) {
+      var rs = mk('a', 'pr-btn pr-btn-ghost pr-btn-block', '✉ ' + T('rsvp'), {
+        href: 'https://wa.me/' + String(RSVP_WHATSAPP).replace(/\D/g, '') + '?text=' + encodeURIComponent(T('rsvpText')),
+        target: '_blank', rel: 'noopener noreferrer' });
+      row2.appendChild(rs);
+    }
+    sec.appendChild(row2);
+  }
+
+  function setupGuestTools(main) {
+    if (document.getElementById('pr-guest-tools')) return;
+    var sec = document.createElement('div');   // a div (not section) so the built-in section effects don't double up
+    sec.id = 'pr-guest-tools';
+    renderGuestTools(sec);
+    var footer = main.querySelector('footer');
+    if (footer) main.insertBefore(sec, footer); else main.appendChild(sec);
+    onLangChange.push(function () { renderGuestTools(sec); });
+  }
+
+  /* =============================================================
      BOOT
      ============================================================= */
   function boot() {
@@ -314,9 +519,11 @@
     var t = setInterval(function () {
       var main = document.querySelector('main');
       tries++;
-      if (main) {
+      if (main && main.querySelector('footer')) {
         clearInterval(t);
+        setupGuestTools(main);
         setupReveals(); setupTilt(); setupCountdown(); watchOpen(main);
+        setupLanguage();
       } else if (tries > 80) { clearInterval(t); }
     }, 150);
   }
