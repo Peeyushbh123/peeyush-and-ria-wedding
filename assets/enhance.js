@@ -59,12 +59,16 @@
 
   function setupMusic() {
     audio = document.getElementById('weddingAudio');
-    if (!audio) return;
+    if (!audio) {
+      document.addEventListener('click', function (e) { if (e.target && e.target.closest && e.target.closest('button[aria-label^="Open invitation"]')) startReveal(); }, true);
+      return;
+    }
     window.__prAudioOK = true;               // tells the built-in synth fallback to stay quiet
     audio.addEventListener('error', function () { window.__prAudioOK = false; });
 
     document.addEventListener('click', function (e) {
       var seal = e.target && e.target.closest && e.target.closest('button[aria-label^="Open invitation"]');
+      if (seal) startReveal();
       if (!seal || !audio.paused) return;
       try {
         audio.muted = false;
@@ -265,7 +269,7 @@
       }
     });
     // short hanging strands
-    var xs = [26, 70, 118, 168, 215, 262, 312, 360, 404];
+    var xs = [152, 188, 215, 242, 278];   // clear of the language / music buttons
     xs.forEach(function (x, idx) {
       var g = el('g', { 'class': 'pr-strand' });
       g.style.setProperty('--sd', (3.4 + (idx % 4) * .6) + 's');
@@ -292,23 +296,154 @@
   }
 
   /* =============================================================
-     ON OPEN — runs once when the invitation becomes visible
+     ENVELOPE COVER — richer seal screen (decoration only; the React logic is untouched)
      ============================================================= */
+  function mandalaSVG(op) {
+    var g = '<circle r="96" stroke-width=".9"/><circle r="91" stroke-dasharray="1.2 3.2"/><circle r="58"/><circle r="30" stroke-width=".8"/>';
+    var i;
+    for (i = 0; i < 24; i++) g += '<path transform="rotate(' + (i * 15) + ')" d="M0-60Q7-75 0-90Q-7-75 0-60Z" fill="rgba(212,175,55,.10)"/>';
+    for (i = 0; i < 12; i++) g += '<path transform="rotate(' + (i * 30 + 15) + ')" d="M0-30Q10-43 0-57Q-10-43 0-30Z" fill="rgba(255,233,168,.12)"/>';
+    for (i = 0; i < 24; i++) g += '<circle r="1.3" cx="0" cy="-93.5" transform="rotate(' + (i * 15 + 7.5) + ')" fill="#D4AF37" stroke="none"/>';
+    g += '<circle r="9" fill="rgba(212,175,55,.18)"/><circle r="4.5" fill="#D4AF37" stroke="none"/>';
+    return '<svg viewBox="-100 -100 200 200" aria-hidden="true"><g class="pr-mandala-spin" fill="none" stroke="#D4AF37" stroke-width=".6" opacity="' + op + '">' + g + '</g></svg>';
+  }
+  var CORNER = '<svg viewBox="0 0 26 26" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M2 24V9Q2 2 9 2H24"/><path d="M7 24V13Q7 7 13 7H24" opacity=".55"/><circle cx="2" cy="2" r="1.6" fill="currentColor" stroke="none"/></svg>';
+
+  var coverEl = null, sealBtn = null;
+  function setupCover() {
+    sealBtn = document.querySelector('button[aria-label^="Open invitation"]');
+    if (!sealBtn) return;
+    coverEl = sealBtn.closest('.fixed');
+    if (!coverEl || coverEl.classList.contains('pr-cover')) return;
+    coverEl.classList.add('pr-cover');
+
+    var glow = document.createElement('div'); glow.className = 'pr-cover-glow'; glow.setAttribute('aria-hidden', 'true');
+    coverEl.insertBefore(glow, coverEl.firstChild);
+
+    var flap = coverEl.querySelector('div[style*="clip-path"]');
+    if (flap) {
+      var art = document.createElement('div'); art.className = 'pr-flap-art'; art.setAttribute('aria-hidden', 'true');
+      art.innerHTML =
+        '<div style="position:absolute;left:50%;top:36%;width:min(92%,380px);aspect-ratio:1;transform:translate(-50%,-50%)">' + mandalaSVG(.55) + '</div>' +
+        '<svg viewBox="0 0 100 100" preserveAspectRatio="none" style="position:absolute;inset:0;width:100%;height:100%">' +
+        '<polyline points="0,68 50,100 100,68" fill="none" stroke="#D4AF37" stroke-width="5" vector-effect="non-scaling-stroke" stroke-linejoin="round"/>' +
+        '<polyline points="0,63 50,94.2 100,63" fill="none" stroke="#E8D5A0" stroke-width="1" stroke-dasharray="2 5" vector-effect="non-scaling-stroke" opacity=".7"/></svg>';
+      flap.appendChild(art);
+    }
+    var body = coverEl.querySelector('div[style*="top: 34%"]');
+    if (body) {
+      var ba = document.createElement('div'); ba.className = 'pr-body-art'; ba.setAttribute('aria-hidden', 'true');
+      ba.innerHTML = ['tl', 'tr', 'bl', 'br'].map(function (c) { return '<span class="pr-corner ' + c + '">' + CORNER + '</span>'; }).join('');
+      body.appendChild(ba);
+    }
+    var box = sealBtn.parentElement;
+    if (box) {
+      var glow2 = document.createElement('div'); glow2.className = 'pr-seal-glow'; glow2.setAttribute('aria-hidden', 'true');
+      var ring = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      ring.setAttribute('class', 'pr-seal-ring'); ring.setAttribute('viewBox', '0 0 206 206'); ring.setAttribute('aria-hidden', 'true');
+      ring.innerHTML = '<defs><path id="prRingPath" d="M103 103m-82 0a82 82 0 1 1 164 0a82 82 0 1 1-164 0"/></defs>' +
+        '<text><textPath href="#prRingPath" textLength="506" lengthAdjust="spacing">SAVE THE DATE ✦ 14 · 15 · 16 FEBRUARY 2027 ✦ JAIPUR ✦ PEEYUSH &amp; RIA ✦ </textPath></text>';
+      box.insertBefore(glow2, box.firstChild); box.insertBefore(ring, box.firstChild);
+    }
+    if (!reduced) {
+      var dust = document.createElement('div'); dust.className = 'pr-dust'; dust.setAttribute('aria-hidden', 'true');
+      var n = lite ? 10 : 22, h = '';
+      for (var k = 0; k < n; k++) h += '<i style="--x:' + (4 + Math.random() * 92).toFixed(1) + '%;--y:' + (8 + Math.random() * 78).toFixed(1) + '%;--t:' + (3.2 + Math.random() * 3.5).toFixed(1) + 's;--d:' + (-Math.random() * 6).toFixed(1) + 's"></i>';
+      dust.innerHTML = h;
+      coverEl.appendChild(dust);
+    }
+  }
+
+  /* =============================================================
+     ROYAL REVEAL — the scene that plays after the seal is tapped
+     ============================================================= */
+  var rv = null, wave = null, revealActive = false, revealDone = false, sparkTimer = 0, exitTimer = 0, canSkip = false;
+
+  function buildReveal() {
+    if (rv) return;
+    rv = document.createElement('div');
+    rv.id = 'pr-reveal'; rv.setAttribute('aria-hidden', 'true');
+    rv.innerHTML = '<div class="pr-rv-halo"></div><div class="pr-rv-mandala">' + mandalaSVG(.9) + '</div>' +
+      '<div class="pr-rv-content"><div class="pr-rv-invoke"></div><h2 class="pr-rv-names"></h2><div class="pr-rv-line"></div>' +
+      '<div class="pr-rv-date"></div><div class="pr-rv-place"></div></div><div class="pr-rv-skip"></div>';
+    document.body.appendChild(rv);
+    wave = document.createElement('div'); wave.id = 'pr-wave'; wave.setAttribute('aria-hidden', 'true');
+    document.body.appendChild(wave);
+    rv.addEventListener('click', function () { if (canSkip) exitReveal(); });
+  }
+
+  function fillReveal() {
+    var hi = isHindi();
+    rv.querySelector('.pr-rv-invoke').textContent = hi ? '॥ श्री गणेशाय नमः ॥' : '॥ Shree Ganeshaya Namah ॥';
+    rv.querySelector('.pr-rv-names').textContent = hi ? 'पीयूष & रिया' : 'Peeyush & Ria';
+    rv.querySelector('.pr-rv-date').textContent = hi ? '14 · 15 · 16 फरवरी 2027' : '14 · 15 · 16 February 2027';
+    rv.querySelector('.pr-rv-place').textContent = hi ? 'जयपुर, राजस्थान' : 'Jaipur, Rajasthan';
+    rv.querySelector('.pr-rv-skip').textContent = hi ? 'आगे बढ़ने के लिए टैप करें' : 'Tap to continue';
+  }
+
+  function heroName() { return document.querySelector('main section h2'); }
+
+  function startReveal() {
+    if (revealActive || revealDone) return;
+    revealActive = true;
+    if (reduced) { setTimeout(runOpen, 1500); return; }
+    buildReveal();
+    var r = sealBtn ? sealBtn.getBoundingClientRect() : null;
+    rv.style.setProperty('--sx', r ? (r.left + r.width / 2) + 'px' : '50%');
+    rv.style.setProperty('--sy', r ? (r.top + r.height / 2) + 'px' : '40%');
+    setTimeout(function () {
+      if (revealDone) return;
+      fillReveal();
+      var h = heroName(); if (h) h.classList.add('pr-wipe-wait');
+      window.scrollTo(0, 0);
+      rv.classList.remove('pr-out');
+      rv.classList.add('pr-on');
+      // gentle gold dust while the names appear
+      sparkTimer = setInterval(function () {
+        if (!fx) return;
+        for (var i = 0; i < 2; i++) fx.spark(innerWidth * (.1 + Math.random() * .8), innerHeight * (.12 + Math.random() * .6));
+      }, 120);
+      setTimeout(function () { if (fx && !revealDone) fx.burst(innerWidth * .5, innerHeight * .36, 70, 1.0); }, 1500);
+      setTimeout(function () { canSkip = true; }, 1800);
+      exitTimer = setTimeout(exitReveal, 3900);
+    }, 750);
+  }
+
+  function exitReveal() {
+    if (revealDone || !rv) return;
+    revealDone = true; canSkip = false;
+    clearInterval(sparkTimer); clearTimeout(exitTimer);
+    rv.classList.add('pr-out');
+    if (wave) { wave.classList.remove('go'); void wave.offsetWidth; wave.classList.add('go'); }
+    if (fx) {
+      fx.burst(innerWidth * .25, innerHeight * .3, 60, 1.05);
+      setTimeout(function () { fx.burst(innerWidth * .75, innerHeight * .26, 60, 1.05); }, 220);
+      setTimeout(function () { fx.burst(innerWidth * .5, innerHeight * .2, 80, 1.15); }, 440);
+    }
+    setTimeout(function () { rv.classList.remove('pr-on', 'pr-out'); rv.style.display = 'none'; }, 1000);
+    runOpen(300);
+  }
+
+  /* shared "the page is now visible" sequence */
   var opened = false;
-  function onOpen() {
+  function runOpen(delay) {
     if (opened) return;
     opened = true;
-    if (reduced) return;
-    setTimeout(function () { showStars(lite ? 3 : 5, [.12, .45]); }, 1800);
-    setTimeout(buildGarland, 3600);
+    var d = delay || 0;
     setTimeout(function () {
-      var h = document.querySelector('main section h2');
-      if (h) { h.classList.remove('pr-hero-entrance', 'pr-name-glow'); h.classList.add('pr-wipe'); }
-    }, 4300);
+      var h = heroName();
+      if (h) { h.classList.remove('pr-hero-entrance', 'pr-name-glow', 'pr-wipe-wait'); if (!reduced) h.classList.add('pr-wipe'); }
+    }, d);
+    if (reduced) return;
+    if (!revealDone) setTimeout(function () { showStars(lite ? 3 : 5, [.12, .45]); }, d);
+    setTimeout(buildGarland, d + 1100);
   }
 
   function watchOpen(main) {
-    function check() { if (/opacity-100/.test(main.className)) onOpen(); }
+    // safety net: if the reveal never ran (e.g. the cover could not be found) still finish the opening
+    function check() {
+      if (/opacity-100/.test(main.className) && !revealActive) setTimeout(function () { if (!revealActive) runOpen(300); }, 1200);
+    }
     new MutationObserver(check).observe(main, { attributes: true, attributeFilter: ['class'] });
     check();
   }
@@ -504,7 +639,7 @@
     sec.id = 'pr-guest-tools';
     renderGuestTools(sec);
     var footer = main.querySelector('footer');
-    if (footer) main.insertBefore(sec, footer); else main.appendChild(sec);
+    if (footer && footer.parentNode) footer.parentNode.insertBefore(sec, footer); else main.appendChild(sec);
     onLangChange.push(function () { renderGuestTools(sec); });
   }
 
@@ -521,6 +656,7 @@
       tries++;
       if (main && main.querySelector('footer')) {
         clearInterval(t);
+        setupCover();
         setupGuestTools(main);
         setupReveals(); setupTilt(); setupCountdown(); watchOpen(main);
         setupLanguage();
