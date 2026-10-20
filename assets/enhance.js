@@ -7,7 +7,7 @@
   /* =============================================================
      SETTINGS — safe to edit
      ============================================================= */
-  var AUDIO_SRC = 'audio/wedding-music.mp3';
+  var AUDIO_SRC = 'assets/audio/wedding-music.wav';
   var VOLUME = 0.55;
 
   // WhatsApp RSVP button: put a number WITH country code, digits only (e.g. '919876543210').
@@ -363,7 +363,18 @@
     if (rv) return;
     rv = document.createElement('div');
     rv.id = 'pr-reveal'; rv.setAttribute('aria-hidden', 'true');
+    var petals = '';
+    if (!reduced) {
+      for (var i = 0; i < 16; i++) {
+        petals += '<i class="pr-rv-petal" style="--x:' + (4 + Math.random() * 92).toFixed(1) + '%;--d:' +
+          (Math.random() * 1.3).toFixed(2) + 's;--rz:' + (Math.random() * 40 - 20).toFixed(0) + 'deg"></i>';
+      }
+    }
     rv.innerHTML = '<div class="pr-rv-halo"></div><div class="pr-rv-mandala">' + mandalaSVG(.9) + '</div>' +
+      '<div class="pr-rv-rays"></div>' +
+      '<div class="pr-rv-gate-scene"><div class="pr-rv-arch"></div><i class="pr-rv-lamp left"></i><i class="pr-rv-lamp right"></i>' +
+      '<div class="pr-rv-gate left"></div><div class="pr-rv-gate right"></div></div>' +
+      '<div class="pr-rv-petals">' + petals + '</div>' +
       '<div class="pr-rv-content"><div class="pr-rv-invoke"></div><h2 class="pr-rv-names"></h2><div class="pr-rv-line"></div>' +
       '<div class="pr-rv-date"></div><div class="pr-rv-place"></div></div><div class="pr-rv-skip"></div>';
     document.body.appendChild(rv);
@@ -403,9 +414,9 @@
         if (!fx) return;
         for (var i = 0; i < 2; i++) fx.spark(innerWidth * (.1 + Math.random() * .8), innerHeight * (.12 + Math.random() * .6));
       }, 120);
-      setTimeout(function () { if (fx && !revealDone) fx.burst(innerWidth * .5, innerHeight * .36, 70, 1.0); }, 1500);
-      setTimeout(function () { canSkip = true; }, 1800);
-      exitTimer = setTimeout(exitReveal, 3900);
+      setTimeout(function () { if (fx && !revealDone) fx.burst(innerWidth * .5, innerHeight * .46, 80, 1.05); }, 1650);
+      setTimeout(function () { canSkip = true; }, 1900);
+      exitTimer = setTimeout(exitReveal, 3700);
     }, 750);
   }
 
