@@ -330,25 +330,25 @@
     function pillar(x, flip) {
       var sx = flip ? -1 : 1;
       return '<g transform="translate(' + x + ',150) scale(' + sx + ',1)">' +
-        '<rect x="-5" y="-60" width="10" height="150" fill="rgba(232,213,160,.14)" stroke="#E8D5A0" stroke-width="1" opacity=".6"/>' +
-        '<path d="M-9 -60 L9 -60 L9 -68 Q0 -76 -9 -68 Z" fill="none" stroke="#E8D5A0" stroke-width="1" opacity=".6"/></g>';
+        '<rect x="-5" y="-60" width="10" height="150" fill="rgba(184,149,47,.1)" stroke="#B8952F" stroke-width="1" opacity=".65"/>' +
+        '<path d="M-9 -60 L9 -60 L9 -68 Q0 -76 -9 -68 Z" fill="none" stroke="#B8952F" stroke-width="1" opacity=".65"/></g>';
     }
     var fountain = '<g transform="translate(150,185)">' +
-      '<ellipse cx="0" cy="48" rx="54" ry="9" fill="rgba(26,33,22,.35)"/>' +
-      '<path d="M-40 34 L40 34 L34 14 L-34 14 Z" fill="#4C5A40"/>' +
-      '<ellipse cx="0" cy="14" rx="34" ry="9" fill="#E8D5A0" opacity=".9"/>' +
+      '<ellipse cx="0" cy="48" rx="54" ry="9" fill="rgba(139,117,30,.16)"/>' +
+      '<path d="M-40 34 L40 34 L34 14 L-34 14 Z" fill="#D9C4A0"/>' +
+      '<ellipse cx="0" cy="14" rx="34" ry="9" fill="#D4AF37" opacity=".9"/>' +
       '<ellipse class="pr-rv-water" cx="0" cy="12" rx="27" ry="6.5" fill="#cfe3d8" opacity=".85"/>' +
-      '<rect x="-3.2" y="-28" width="6.4" height="40" fill="#5B6B52"/>' +
-      '<ellipse cx="0" cy="-28" rx="16" ry="6" fill="#E8D5A0" opacity=".9"/>' +
+      '<rect x="-3.2" y="-28" width="6.4" height="40" fill="#B5A177"/>' +
+      '<ellipse cx="0" cy="-28" rx="16" ry="6" fill="#D4AF37" opacity=".9"/>' +
       '<ellipse class="pr-rv-water" cx="0" cy="-29.5" rx="12" ry="4" fill="#cfe3d8" opacity=".85"/>' +
-      '<circle cx="0" cy="-34" r="2.4" fill="#E8D5A0"/>' +
-      '<path d="M0 -36 C-10 -46 -4 -54 0 -60" stroke="#cfe3d8" stroke-width="1.6" fill="none" opacity=".75"/>' +
-      '<path d="M0 -36 C10 -46 4 -54 0 -60" stroke="#cfe3d8" stroke-width="1.6" fill="none" opacity=".75"/>' +
-      '<circle class="pr-rv-spray" cx="-5" cy="-58" r="1.6" fill="#fff" opacity=".8"/>' +
-      '<circle class="pr-rv-spray" cx="5" cy="-57" r="1.4" fill="#fff" opacity=".7"/>' +
-      '<circle class="pr-rv-spray" cx="0" cy="-63" r="1.6" fill="#fff" opacity=".85"/></g>';
+      '<circle cx="0" cy="-34" r="2.4" fill="#D4AF37"/>' +
+      '<path d="M0 -36 C-10 -46 -4 -54 0 -60" stroke="#9FCBBB" stroke-width="1.6" fill="none" opacity=".75"/>' +
+      '<path d="M0 -36 C10 -46 4 -54 0 -60" stroke="#9FCBBB" stroke-width="1.6" fill="none" opacity=".75"/>' +
+      '<circle class="pr-rv-spray" cx="-5" cy="-58" r="1.6" fill="#9FCBBB" opacity=".8"/>' +
+      '<circle class="pr-rv-spray" cx="5" cy="-57" r="1.4" fill="#9FCBBB" opacity=".7"/>' +
+      '<circle class="pr-rv-spray" cx="0" cy="-63" r="1.6" fill="#9FCBBB" opacity=".85"/></g>';
     var out = '<svg viewBox="0 0 300 300" aria-hidden="true">';
-    out += '<path d="M40 280 Q40 40 150 40 Q260 40 260 280" fill="none" stroke="#E8D5A0" stroke-width="2" opacity=".55"/>';
+    out += '<path d="M40 280 Q40 40 150 40 Q260 40 260 280" fill="none" stroke="#B8952F" stroke-width="2" opacity=".6"/>';
     out += pillar(44, false) + pillar(256, true);
     out += rose(78, 205, false) + rose(222, 205, true);
     out += topiary(36, 240, .85) + topiary(264, 240, .85);
@@ -371,7 +371,7 @@
     if (flap) {
       var art = document.createElement('div'); art.className = 'pr-flap-art'; art.setAttribute('aria-hidden', 'true');
       art.innerHTML =
-        '<div style="position:absolute;left:50%;top:36%;width:min(92%,380px);aspect-ratio:1;transform:translate(-50%,-50%)">' + mandalaSVG(.55) + '</div>' +
+        '<div style="position:absolute;left:50%;top:50%;width:min(80%,300px);aspect-ratio:1;transform:translate(-50%,-50%)">' + mandalaSVG(.55) + '</div>' +
         '<svg viewBox="0 0 100 100" preserveAspectRatio="none" style="position:absolute;inset:0;width:100%;height:100%">' +
         '<polyline points="0,68 50,100 100,68" fill="none" stroke="#D4AF37" stroke-width="5" vector-effect="non-scaling-stroke" stroke-linejoin="round"/>' +
         '<polyline points="0,63 50,94.2 100,63" fill="none" stroke="#E8D5A0" stroke-width="1" stroke-dasharray="2 5" vector-effect="non-scaling-stroke" opacity=".7"/></svg>';
@@ -418,7 +418,6 @@
       }
     }
     rv.innerHTML = '<div class="pr-rv-halo"></div><div class="pr-rv-mandala pr-rv-garden">' + gardenSVG() + '</div>' +
-      '<div class="pr-rv-rays"></div>' +
       '<div class="pr-rv-gate-scene"><i class="pr-rv-lamp left"></i><i class="pr-rv-lamp right"></i>' +
       '<div class="pr-rv-gate left"><i class="pr-rv-fringe"></i><i class="pr-rv-gate-shine"></i></div>' +
       '<div class="pr-rv-gate right"><i class="pr-rv-fringe"></i><i class="pr-rv-gate-shine"></i></div></div>' +
