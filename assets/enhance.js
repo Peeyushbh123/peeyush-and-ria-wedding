@@ -7,7 +7,7 @@
   /* =============================================================
      SETTINGS — safe to edit
      ============================================================= */
-  var AUDIO_SRC = 'assets/audio/wedding-music.wav';
+  var AUDIO_SRC = 'assets/audio/jashn-e-bahaara-instrumental.m4a';
   var VOLUME = 0.55;
 
   // WhatsApp RSVP button: put a number WITH country code, digits only (e.g. '919876543210').
