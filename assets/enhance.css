@@ -221,13 +221,6 @@ main div.justify-center.gap-3.py-1 > div.rounded-full { animation: prBob 4.5s ea
 .pr-cover .pr-orn::before, .pr-cover .pr-orn::after { content: ""; width: 48px; height: 1px; background: linear-gradient(90deg, transparent, #D4AF37); }
 .pr-cover .pr-orn::after { transform: scaleX(-1); }
 
-/* ---------- Cover ribbon: the seal sits on a seam, like a ribbon-tied invitation ---------- */
-.pr-cover-ribbon {
-  position: absolute; left: 50%; top: 0; bottom: 0; width: 3px; transform: translateX(-50%); z-index: 2; pointer-events: none;
-  background: linear-gradient(180deg, transparent 0%, rgba(232,213,160,.75) 8%, rgba(212,175,55,.85) 50%, rgba(232,213,160,.75) 92%, transparent 100%);
-  box-shadow: 0 0 10px rgba(212,175,55,.3);
-}
-
 /* ---------- Cover wallpaper: fine gold vine line-art, self-contained ---------- */
 .pr-cover::before {
   content: "";
@@ -243,6 +236,33 @@ main div.justify-center.gap-3.py-1 > div.rounded-full { animation: prBob 4.5s ea
   animation: prSealSweep 3.6s linear infinite;
 }
 @keyframes prSealSweep { to { transform: rotate(360deg); } }
+
+/* ---------- Seal crack: an instant burst of gold light right at the tap, before the curtains draw ---------- */
+#pr-crack { position: fixed; left: 50%; top: 50%; width: 0; height: 0; z-index: 99999; pointer-events: none; }
+#pr-crack .pr-crack-core {
+  position: absolute; left: 0; top: 0; width: 14px; height: 14px; margin: -7px 0 0 -7px; border-radius: 50%;
+  background: radial-gradient(circle, #fff6dc, #ffe4a0 45%, rgba(255,214,121,0) 75%); opacity: 0; filter: blur(.5px);
+}
+#pr-crack.go .pr-crack-core { animation: prCrackCore .6s cubic-bezier(.2,.7,.2,1) forwards; }
+@keyframes prCrackCore { 0% { opacity: 0; transform: scale(.3); } 18% { opacity: 1; transform: scale(1); } 100% { opacity: 0; transform: scale(9); } }
+#pr-crack .pr-crack-ring {
+  position: absolute; left: 0; top: 0; width: 18px; height: 18px; margin: -9px 0 0 -9px; border-radius: 50%;
+  border: 1.5px solid rgba(255,226,150,.9); opacity: 0;
+}
+#pr-crack.go .pr-crack-ring { animation: prCrackRing .75s cubic-bezier(.2,.6,.2,1) .05s forwards; }
+@keyframes prCrackRing { 0% { opacity: .9; transform: scale(.6); } 100% { opacity: 0; transform: scale(14); } }
+#pr-crack .pr-crack-shard {
+  position: absolute; left: 0; top: 0; width: 5px; height: 14px; margin: -7px 0 0 -2.5px;
+  background: linear-gradient(180deg, #fff3c4, #D4AF37); opacity: 0; border-radius: 2px;
+}
+#pr-crack.go .pr-crack-shard.a { animation: prShardA .55s cubic-bezier(.2,.7,.2,1) forwards; }
+#pr-crack.go .pr-crack-shard.b { animation: prShardB .55s cubic-bezier(.2,.7,.2,1) .03s forwards; }
+#pr-crack.go .pr-crack-shard.c { animation: prShardC .55s cubic-bezier(.2,.7,.2,1) .015s forwards; }
+#pr-crack.go .pr-crack-shard.d { animation: prShardD .55s cubic-bezier(.2,.7,.2,1) .045s forwards; }
+@keyframes prShardA { 0% { opacity: 1; transform: translate(0,0) rotate(-20deg); } 100% { opacity: 0; transform: translate(-34px,-46px) rotate(-70deg); } }
+@keyframes prShardB { 0% { opacity: 1; transform: translate(0,0) rotate(20deg); } 100% { opacity: 0; transform: translate(34px,-46px) rotate(70deg); } }
+@keyframes prShardC { 0% { opacity: 1; transform: translate(0,0) rotate(200deg); } 100% { opacity: 0; transform: translate(-30px,40px) rotate(260deg); } }
+@keyframes prShardD { 0% { opacity: 1; transform: translate(0,0) rotate(160deg); } 100% { opacity: 0; transform: translate(30px,40px) rotate(100deg); } }
 
 /* ---------- Royal reveal (after the seal is tapped) ---------- */
 #pr-reveal {

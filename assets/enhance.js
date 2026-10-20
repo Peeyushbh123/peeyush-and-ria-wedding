@@ -374,9 +374,6 @@
     var glow = document.createElement('div'); glow.className = 'pr-cover-glow'; glow.setAttribute('aria-hidden', 'true');
     coverEl.insertBefore(glow, coverEl.firstChild);
 
-    var ribbon = document.createElement('div'); ribbon.className = 'pr-cover-ribbon'; ribbon.setAttribute('aria-hidden', 'true');
-    coverEl.insertBefore(ribbon, coverEl.firstChild);
-
     var flap = coverEl.querySelector('div[style*="clip-path"]');
     if (flap) {
       var art = document.createElement('div'); art.className = 'pr-flap-art'; art.setAttribute('aria-hidden', 'true');
@@ -450,14 +447,31 @@
 
   function heroName() { return document.querySelector('main section h2'); }
 
+  var crack = null;
+  function buildCrack() {
+    if (crack) return;
+    crack = document.createElement('div');
+    crack.id = 'pr-crack'; crack.setAttribute('aria-hidden', 'true');
+    crack.innerHTML = '<i class="pr-crack-core"></i><i class="pr-crack-ring"></i>' +
+      '<i class="pr-crack-shard a"></i><i class="pr-crack-shard b"></i><i class="pr-crack-shard c"></i><i class="pr-crack-shard d"></i>';
+    document.body.appendChild(crack);
+  }
+
   function startReveal() {
     if (revealActive || revealDone) return;
     revealActive = true;
     if (reduced) { setTimeout(runOpen, 1500); return; }
     buildReveal();
     var r = sealBtn ? sealBtn.getBoundingClientRect() : null;
-    rv.style.setProperty('--sx', r ? (r.left + r.width / 2) + 'px' : '50%');
-    rv.style.setProperty('--sy', r ? (r.top + r.height / 2) + 'px' : '40%');
+    var cx = r ? r.left + r.width / 2 : innerWidth / 2;
+    var cy = r ? r.top + r.height / 2 : innerHeight * 0.4;
+    rv.style.setProperty('--sx', cx + 'px');
+    rv.style.setProperty('--sy', cy + 'px');
+    // the seal cracking open: an instant burst of gold light right where the guest tapped
+    buildCrack();
+    crack.style.left = cx + 'px'; crack.style.top = cy + 'px';
+    crack.classList.remove('go'); void crack.offsetWidth; crack.classList.add('go');
+    if (fx) fx.burst(cx, cy, 46, .85);
     setTimeout(function () {
       if (revealDone) return;
       fillReveal();
