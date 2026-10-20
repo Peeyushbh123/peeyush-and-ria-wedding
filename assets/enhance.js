@@ -7,8 +7,8 @@
   /* =============================================================
      SETTINGS — safe to edit
      ============================================================= */
-  var AUDIO_SRC = 'assets/audio/jashn-e-bahaara-instrumental.m4a';
-  var VOLUME = 0.55;
+  // The background track lives in index.html's own `Cn` array (search for "Cn=["), not here —
+  // this file just triggers the built-in music button; it never sets the <audio> src itself.
 
   // WhatsApp RSVP button: put a number WITH country code, digits only (e.g. '919876543210').
   // Leave empty ('') to hide the RSVP button.
@@ -44,43 +44,34 @@
   function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
 
   /* =============================================================
-     MUSIC — starts inside the seal tap (a real user gesture), fades in
+     MUSIC — starts inside the seal tap (a real user gesture)
      ============================================================= */
   var audio = null, wasPlaying = false;
 
-  function fadeIn(a, target, ms) {
-    var t0 = performance.now();
-    (function step() {
-      var k = Math.min(1, (performance.now() - t0) / ms);
-      try { a.volume = target * (k * k * (3 - 2 * k)); } catch (e) {}
-      if (k < 1) requestAnimationFrame(step);
-    })();
-  }
-
   function setupMusic() {
-    audio = document.getElementById('weddingAudio');
-    if (!audio) {
-      document.addEventListener('click', function (e) { if (e.target && e.target.closest && e.target.closest('button[aria-label^="Open invitation"]')) startReveal(); }, true);
-      return;
-    }
-    window.__prAudioOK = true;               // tells the built-in synth fallback to stay quiet
-    audio.addEventListener('error', function () { window.__prAudioOK = false; });
-
+    // don't resolve #weddingAudio here — enhance.js can boot before React has mounted it,
+    // so look it up lazily, right when it's actually needed (always rendered by tap time)
     document.addEventListener('click', function (e) {
       var seal = e.target && e.target.closest && e.target.closest('button[aria-label^="Open invitation"]');
-      if (seal) startReveal();
-      if (!seal || !audio.paused) return;
-      try {
-        audio.muted = false;
-        audio.volume = 0;
-        if (!audio.src || audio.src.indexOf('wedding-music') < 0) audio.src = AUDIO_SRC;
-        var p = audio.play();
-        if (p && p.then) p.then(function () { fadeIn(audio, VOLUME, 3500); }).catch(function () {});
-      } catch (err) {}
+      if (!seal) return;
+      startReveal();
+      if (!audio) {
+        audio = document.getElementById('weddingAudio');
+        if (audio) {
+          window.__prAudioOK = true;             // tells the built-in synth fallback to stay quiet
+          audio.addEventListener('error', function () { window.__prAudioOK = false; });
+        }
+      }
+      if (!audio) return;
+      // start music the same proven way the visible MUSIC button does, instead of
+      // duplicating that play() logic here (that duplicate path was unreliable)
+      var musicBtn = document.querySelector('button[aria-pressed]');
+      if (musicBtn && musicBtn.getAttribute('aria-pressed') !== 'true') musicBtn.click();
     }, true);
 
     // pause politely when the tab is hidden, resume when it returns
     document.addEventListener('visibilitychange', function () {
+      if (!audio) return;
       if (document.hidden) { wasPlaying = !audio.paused; if (wasPlaying) audio.pause(); }
       else if (wasPlaying) { audio.play().catch(function () {}); }
     });
