@@ -300,6 +300,13 @@ main div.justify-center.gap-3.py-1 > div.rounded-full { animation: prBob 4.5s ea
 #pr-reveal.pr-on .pr-rv-lamp { animation: prLampGlow 1.4s .5s ease-out forwards; }
 @keyframes prLampGlow { from { opacity: 0; } to { opacity: 1; } }
 
+#pr-reveal .pr-rv-finial { transform-box: fill-box; transform-origin: 50% 100%; filter: drop-shadow(0 0 0 rgba(212,175,55,0)); }
+#pr-reveal.pr-on .pr-rv-finial { animation: prFinialGlow 3.2s ease-in-out .9s infinite; }
+@keyframes prFinialGlow {
+  0%, 100% { filter: drop-shadow(0 0 1px rgba(212,175,55,.3)); }
+  50% { filter: drop-shadow(0 0 6px rgba(212,175,55,.85)); }
+}
+
 /* curtain panels: vertical fabric pleats + gold valance rod + a hanging tassel fringe */
 #pr-reveal .pr-rv-gate {
   position: absolute; top: 0; bottom: 0; width: 50%; z-index: 2; backface-visibility: hidden; transform-style: preserve-3d; overflow: hidden;
@@ -404,7 +411,7 @@ main div.justify-center.gap-3.py-1 > div.rounded-full { animation: prBob 4.5s ea
   #pr-reveal.pr-on { animation: none; clip-path: none; }
   .pr-rv-invoke, .pr-rv-line, .pr-rv-place, .pr-rv-names, .pr-rv-skip { opacity: 1 !important; animation: none !important; }
   .pr-rv-line { width: 200px; }
-  .pr-rv-garden, .pr-rv-lamp, .pr-rv-water, .pr-rv-spray { opacity: 1 !important; animation: none !important; transition: none !important; }
+  .pr-rv-garden, .pr-rv-lamp, .pr-rv-water, .pr-rv-spray, .pr-rv-finial { opacity: 1 !important; animation: none !important; transition: none !important; }
   .pr-rv-gate-shine { display: none !important; }
   .pr-rv-gate.left, .pr-rv-gate.right { animation: none !important; opacity: 0 !important; }
   .pr-rv-petal { display: none !important; }

@@ -372,10 +372,21 @@
       '<circle class="pr-rv-spray" cx="-6" cy="-59" r="1.7" fill="#fff" opacity=".85"/>' +
       '<circle class="pr-rv-spray" cx="6" cy="-58" r="1.5" fill="#fff" opacity=".75"/>' +
       '<circle class="pr-rv-spray" cx="0" cy="-64" r="1.7" fill="#fff" opacity=".9"/></g>';
+    // a small, simple trishul-and-crescent emblem (Shiva) with a blossom accent (Parvati) —
+    // a quiet nod to the Mahadev temple the venue is named for, not a literal figure
+    var finial = '<g class="pr-rv-finial" transform="translate(150,34)">' +
+      '<path d="M0 -3 L0 15" stroke="#B8952F" stroke-width="2" stroke-linecap="round"/>' +
+      '<path d="M0 -3 Q-7 -7 -9 -16" stroke="#B8952F" stroke-width="2" fill="none" stroke-linecap="round"/>' +
+      '<path d="M0 -3 Q7 -7 9 -16" stroke="#B8952F" stroke-width="2" fill="none" stroke-linecap="round"/>' +
+      '<path d="M0 -3 L0 -18" stroke="#B8952F" stroke-width="2" stroke-linecap="round"/>' +
+      '<path d="M-15 -11 A6.5 6.5 0 1 0 -15 -24 A8.5 8.5 0 1 1 -15 -11 Z" fill="#D4AF37" opacity=".85"/>' +
+      '<circle cx="0" cy="18" r="3.2" fill="#E0738A"/><circle cx="-4" cy="20" r="2.4" fill="#E0738A" opacity=".85"/><circle cx="4" cy="20" r="2.4" fill="#E0738A" opacity=".85"/>' +
+      '</g>';
     var out = '<svg viewBox="0 0 300 300" aria-hidden="true">' + GARDEN_DEFS;
     out += '<ellipse cx="150" cy="130" rx="130" ry="110" fill="url(#prgArchGlow)" opacity=".5"/>';
     out += '<path d="M40 280 Q40 40 150 40 Q260 40 260 280" fill="none" stroke="url(#prgPillar)" stroke-width="3" opacity=".75"/>';
     out += '<path d="M40 280 Q40 40 150 40 Q260 40 260 280" fill="none" stroke="#FFF3C8" stroke-width="1" opacity=".5"/>';
+    out += finial;
     out += pillar(44, false) + pillar(256, true);
     out += rose(78, 205, false) + rose(222, 205, true);
     out += topiary(36, 240, .85) + topiary(264, 240, .85);
