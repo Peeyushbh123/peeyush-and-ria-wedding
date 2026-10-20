@@ -900,6 +900,45 @@
     canvas.addEventListener('pointerleave', stop);
   }
 
+  /* ---------- Groom / bride medallions: simple illustrated silhouettes, not photos ---------- */
+  var GROOM_MEDALLION =
+    '<svg viewBox="0 0 60 60" aria-hidden="true">' +
+    '<defs><radialGradient id="pgmBg" cx="35%" cy="28%" r="75%"><stop offset="0%" stop-color="#FFFBF0"/><stop offset="100%" stop-color="#F0DEB2"/></radialGradient>' +
+    '<linearGradient id="pgmTurban" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#D9B86B"/><stop offset="100%" stop-color="#9C7324"/></linearGradient></defs>' +
+    '<circle cx="30" cy="30" r="28" fill="url(#pgmBg)" stroke="#D4AF37" stroke-width="1.6"/>' +
+    '<path d="M15 29 Q15 9 30 7 Q45 9 45 29 Q45 34 40 35 L20 35 Q15 34 15 29 Z" fill="url(#pgmTurban)"/>' +
+    '<path d="M18 27 Q24 18 30 27" stroke="#FFF3C8" stroke-width="1.2" fill="none" opacity=".6"/>' +
+    '<path d="M30 7 L30 1.5" stroke="#D4AF37" stroke-width="1.8" stroke-linecap="round"/><circle cx="30" cy="1" r="2" fill="#D4AF37"/>' +
+    '<path d="M21 35 Q21 49 30 51 Q39 49 39 35 Z" fill="#3E4A33"/>' +
+    '<path d="M17 53 L30 46 L43 53 L43 59 L17 59 Z" fill="#8B7355"/>' +
+    '<path d="M30 46 L30 53" stroke="#D4AF37" stroke-width="1" opacity=".7"/>' +
+    '</svg>';
+  var BRIDE_MEDALLION =
+    '<svg viewBox="0 0 60 60" aria-hidden="true">' +
+    '<defs><radialGradient id="pbmBg" cx="35%" cy="28%" r="75%"><stop offset="0%" stop-color="#FFFBF0"/><stop offset="100%" stop-color="#F3DCE2"/></radialGradient>' +
+    '<radialGradient id="pbmVeil" cx="35%" cy="25%" r="80%"><stop offset="0%" stop-color="#F0A3B4"/><stop offset="100%" stop-color="#C16A80"/></radialGradient></defs>' +
+    '<circle cx="30" cy="30" r="28" fill="url(#pbmBg)" stroke="#D4AF37" stroke-width="1.6"/>' +
+    '<path d="M11 33 Q13 9 30 8 Q47 9 49 33 Q49 39 43 41 L17 41 Q11 39 11 33 Z" fill="url(#pbmVeil)" opacity=".9"/>' +
+    '<path d="M21 29 Q21 45 30 47 Q39 45 39 29 Z" fill="#3E4A33"/>' +
+    '<circle cx="30" cy="17" r="1.6" fill="#D4AF37"/><path d="M30 17 L30 22" stroke="#D4AF37" stroke-width="1"/><circle cx="30" cy="23.5" r="1.8" fill="#D4AF37"/>' +
+    '<circle cx="19" cy="35" r="2" fill="#D4AF37"/><circle cx="41" cy="35" r="2" fill="#D4AF37"/>' +
+    '<path d="M17 51 L30 44 L43 51 L43 59 L17 59 Z" fill="#9B3A52" opacity=".85"/>' +
+    '<circle cx="30" cy="53" r="2.1" fill="#D4AF37"/>' +
+    '</svg>';
+
+  function setupCoupleMedallions(main) {
+    if (document.getElementById('pr-groom-medallion')) return;
+    var cards = $$('main .grid.gap-3.mb-7 > div');
+    if (cards.length !== 2) return;
+    [[cards[0], GROOM_MEDALLION, 'pr-groom-medallion'], [cards[1], BRIDE_MEDALLION, 'pr-bride-medallion']].forEach(function (pair) {
+      var card = pair[0], svg = pair[1], id = pair[2];
+      var wrap = document.createElement('div');
+      wrap.id = id; wrap.className = 'pr-medallion';
+      wrap.innerHTML = svg;
+      card.insertBefore(wrap, card.firstChild);
+    });
+  }
+
   function setupScratchSection(main) {
     if (document.getElementById('pr-scratch')) return;
     var sec = document.createElement('div');
@@ -932,6 +971,7 @@
         clearInterval(t);
         setupCover();
         setupScratchSection(main);
+        setupCoupleMedallions(main);
         setupGuestTools(main);
         setupReveals(); setupTilt(); setupCountdown(); watchOpen(main);
         setupLanguage();
