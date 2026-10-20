@@ -191,7 +191,7 @@
      SCROLL REVEALS — cards slide in from alternating sides
      ============================================================= */
   function setupReveals() {
-    var els = $$('main article.group, main .grid.gap-3 > div.group, #pr-guest-tools');
+    var els = $$('main article.group, main .grid.gap-3 > div.group, #pr-guest-tools, #pr-scratch');
     if (!els.length) return;
     if (reduced || !('IntersectionObserver' in window)) return;
     els.forEach(function (el, i) { el.classList.add('pr-rev', i % 2 ? 'pr-from-r' : 'pr-from-l'); });
@@ -712,6 +712,151 @@
   }
 
   /* =============================================================
+     SCRATCH CARD — a heart you scratch to reveal the save-the-date
+     ============================================================= */
+  var STR_SCRATCH = {
+    eyebrow: ['A little surprise', 'एक छोटी सी सौगात'],
+    prompt: ['Scratch to reveal', 'स्क्रैच करें'],
+    heading: ['Save the Date', 'यह तारीख सहेजें'],
+    dates: ['14 · 15 · 16', '14 · 15 · 16'],
+    month: ['February 2027', 'फरवरी 2027'],
+    place: ['Jaipur, Rajasthan', 'जयपुर, राजस्थान'],
+    tag: ['#PyaaRkaaSafar', '#PyaaRkaaSafar'],
+    hint: ['Swipe your finger across the heart', 'हृदय पर अपनी उंगली घुमाएँ']
+  };
+  function TS(key) { return STR_SCRATCH[key][isHindi() ? 1 : 0]; }
+
+  function heartPath(ctx, cx, cy, size) {
+    var top = size * 0.32;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy + top);
+    ctx.bezierCurveTo(cx, cy, cx - size / 2, cy, cx - size / 2, cy + top);
+    ctx.bezierCurveTo(cx - size / 2, cy + (size + top) / 2, cx, cy + (size + top) / 2, cx, cy + size);
+    ctx.bezierCurveTo(cx, cy + (size + top) / 2, cx + size / 2, cy + (size + top) / 2, cx + size / 2, cy + top);
+    ctx.bezierCurveTo(cx + size / 2, cy, cx, cy, cx, cy + top);
+    ctx.closePath();
+  }
+
+  function renderScratchContent(sec) {
+    sec.innerHTML =
+      '<p class="pr-gt-eyebrow">' + TS('eyebrow') + '</p>' +
+      '<div class="pr-scratch-card">' +
+        '<div class="pr-scratch-reveal">' +
+          '<p class="pr-scratch-heading">' + TS('heading') + '</p>' +
+          '<p class="pr-scratch-dates">' + TS('dates') + '</p>' +
+          '<p class="pr-scratch-month">' + TS('month') + '</p>' +
+          '<p class="pr-scratch-place">' + TS('place') + '</p>' +
+          '<p class="pr-scratch-tag">' + TS('tag') + '</p>' +
+        '</div>' +
+      '</div>' +
+      '<p class="pr-scratch-hint">' + TS('hint') + '</p>';
+  }
+
+  function setupScratchCanvas(card) {
+    var canvas = document.createElement('canvas');
+    canvas.className = 'pr-scratch-canvas'; canvas.setAttribute('aria-hidden', 'true');
+    card.appendChild(canvas);
+    var ctx = canvas.getContext('2d');
+    var dpr = Math.min(2, window.devicePixelRatio || 1);
+    var W = 0, H = 0, revealed = false, scratching = false, moveCount = 0;
+
+    function draw() {
+      ctx.clearRect(0, 0, W, H);
+      // the ENTIRE card is opaque until scratched — the heart below is just a decorative hint,
+      // never a clip mask, so nothing can peek out around it on any screen size.
+      var g = ctx.createLinearGradient(0, 0, W, H);
+      g.addColorStop(0, '#4C5A40'); g.addColorStop(1, '#2A331F');
+      ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+      ctx.fillStyle = 'rgba(232,213,160,.35)';
+      for (var i = 0; i < Math.round((W * H) / 900); i++) {
+        ctx.beginPath();
+        ctx.arc(Math.random() * W, Math.random() * H, Math.random() * 1.3 + .3, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      var heartCy = H * 0.54, heartSize = Math.min(W, H) * 0.56;
+      ctx.save();
+      heartPath(ctx, W / 2, heartCy - heartSize * 0.5, heartSize);
+      ctx.strokeStyle = 'rgba(232,213,160,.85)'; ctx.lineWidth = 2; ctx.stroke();
+      ctx.restore();
+      ctx.fillStyle = '#F3E9C8'; ctx.textAlign = 'center';
+      ctx.font = '600 11px Inter, sans-serif';
+      ctx.fillText(TS('prompt').toUpperCase(), W / 2, heartCy - heartSize * 0.5 - 6);
+      ctx.font = (heartSize * 0.3).toFixed(0) + 'px serif'; ctx.fillText('♡', W / 2, heartCy + heartSize * 0.12);
+    }
+
+    function applySize(w, h) {
+      if (w <= 0 || h <= 0 || revealed) return;
+      W = w; H = h;
+      canvas.width = Math.max(1, Math.round(W * dpr)); canvas.height = Math.max(1, Math.round(H * dpr));
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      draw();
+    }
+    if (window.ResizeObserver) {
+      new ResizeObserver(function (entries) {
+        var r = entries[0].contentRect;
+        applySize(r.width, r.height);
+      }).observe(card);
+    } else {
+      var fallback = function () { var r = card.getBoundingClientRect(); applySize(r.width, r.height); };
+      fallback();
+      addEventListener('resize', fallback);
+    }
+
+    function posFromEvent(e) {
+      var r = canvas.getBoundingClientRect();
+      return { x: e.clientX - r.left, y: e.clientY - r.top };
+    }
+    function scratchAt(x, y) {
+      ctx.globalCompositeOperation = 'destination-out';
+      ctx.beginPath(); ctx.arc(x, y, 24, 0, Math.PI * 2); ctx.fill();
+      ctx.globalCompositeOperation = 'source-over';
+    }
+    function checkCleared() {
+      if (revealed) return;
+      var data = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+      var total = 0, cleared = 0;
+      for (var i = 3; i < data.length; i += 4 * 23) { total++; if (data[i] < 40) cleared++; }
+      if (total && cleared / total > 0.48) revealAll();
+    }
+    function revealAll() {
+      revealed = true;
+      card.classList.add('pr-scratched');
+      canvas.style.opacity = '0'; canvas.style.transform = 'scale(1.05)';
+      setTimeout(function () { if (canvas.parentNode) canvas.parentNode.removeChild(canvas); }, 650);
+    }
+    function start(e) { if (revealed) return; scratching = true; var p = posFromEvent(e); scratchAt(p.x, p.y); e.preventDefault(); }
+    function move(e) {
+      if (!scratching || revealed) return;
+      var p = posFromEvent(e); scratchAt(p.x, p.y);
+      if (++moveCount % 4 === 0) checkCleared();
+      e.preventDefault();
+    }
+    function stop() { scratching = false; }
+    canvas.addEventListener('pointerdown', start);
+    canvas.addEventListener('pointermove', move);
+    canvas.addEventListener('pointerup', stop);
+    canvas.addEventListener('pointercancel', stop);
+    canvas.addEventListener('pointerleave', stop);
+  }
+
+  function setupScratchSection(main) {
+    if (document.getElementById('pr-scratch')) return;
+    var sec = document.createElement('div');
+    sec.id = 'pr-scratch';
+    renderScratchContent(sec);
+    var hero = main.querySelector('section');
+    if (hero && hero.parentNode) hero.parentNode.insertBefore(sec, hero.nextSibling); else main.insertBefore(sec, main.firstChild);
+    setupScratchCanvas(sec.querySelector('.pr-scratch-card'));
+    onLangChange.push(function () {
+      var eyebrow = sec.querySelector('.pr-gt-eyebrow'); if (eyebrow) eyebrow.textContent = TS('eyebrow');
+      var hint = sec.querySelector('.pr-scratch-hint'); if (hint) hint.textContent = TS('hint');
+      var heading = sec.querySelector('.pr-scratch-heading'); if (heading) heading.textContent = TS('heading');
+      var place = sec.querySelector('.pr-scratch-place'); if (place) place.textContent = TS('place');
+      var month = sec.querySelector('.pr-scratch-month'); if (month) month.textContent = TS('month');
+    });
+  }
+
+  /* =============================================================
      BOOT
      ============================================================= */
   function boot() {
@@ -725,6 +870,7 @@
       if (main && main.querySelector('footer')) {
         clearInterval(t);
         setupCover();
+        setupScratchSection(main);
         setupGuestTools(main);
         setupReveals(); setupTilt(); setupCountdown(); watchOpen(main);
         setupLanguage();
