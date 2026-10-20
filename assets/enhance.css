@@ -90,20 +90,6 @@ main div.justify-center.gap-3.py-1 > div.rounded-full { animation: prBob 4.5s ea
 .font-quote  { font-family: 'Cormorant Garamond', 'Noto Serif Devanagari', Baskerville, Georgia, serif; font-size-adjust: .46; }
 .font-sans, .small-caps, .small-caps-dark { font-family: 'Inter', 'Noto Sans Devanagari', system-ui, -apple-system, 'Segoe UI', sans-serif; }
 
-/* ---------- Groom / bride medallions ---------- */
-.pr-medallion {
-  position: relative; z-index: 10; width: 72px; height: 72px; margin: 0 0 12px;
-  filter: drop-shadow(0 4px 10px rgba(62,74,51,.18));
-}
-.pr-medallion svg { width: 100%; height: 100%; display: block; }
-.pr-medallion::after {
-  content: ""; position: absolute; inset: -3px; border-radius: 50%; pointer-events: none;
-  background: conic-gradient(from 0deg, transparent 0 80%, rgba(255,243,196,.65) 92%, transparent 100%);
-  animation: prMedallionSweep 4.5s linear infinite;
-}
-@keyframes prMedallionSweep { to { transform: rotate(360deg); } }
-@media (prefers-reduced-motion: reduce) { .pr-medallion::after { animation: none; } }
-
 /* ---------- Scratch card: a heart you scratch to reveal the save-the-date ---------- */
 #pr-scratch {
   position: relative; margin: 20px 0 28px; padding: 24px 18px 20px; border-radius: 22px; overflow: hidden; text-align: center;
@@ -113,13 +99,15 @@ main div.justify-center.gap-3.py-1 > div.rounded-full { animation: prBob 4.5s ea
 }
 #pr-scratch::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, #D4AF37, #E8D5A0, #B8952F); }
 .pr-scratch-card {
-  position: relative; margin: 14px auto 10px; width: min(78vw, 280px); aspect-ratio: 1 / 1.08;
+  position: relative; margin: 14px auto 10px; width: min(84vw, 310px);
   border-radius: 20px; overflow: hidden; background: linear-gradient(180deg, #FFFEF9, #FFFBF0);
-  border: 1px solid rgba(232,213,160,.6); box-shadow: inset 0 1px 0 rgba(255,255,255,.8);
+  border: 1px solid rgba(232,213,160,.6); box-shadow: inset 0 1px 0 rgba(255,255,255,.8), 0 14px 30px rgba(62,74,51,.14);
 }
-.pr-scratch-reveal { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; padding: 16px; }
+.pr-scratch-reveal { display: block; }
+.pr-scratch-photo { display: block; width: 100%; height: auto; max-height: 62vh; object-fit: cover; aspect-ratio: 736 / 1103; }
+.pr-scratch-caption { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 16px; text-align: center; }
 .pr-scratch-heading { font: 600 20px/1.2 'Playfair Display', 'Noto Serif Devanagari', Georgia, serif; color: #3E4A33; margin: 0 0 6px; }
-.pr-scratch-dates { font: 600 54px/1 'Cormorant Garamond', 'Noto Serif Devanagari', Georgia, serif; color: #B8952F; margin: 2px 0 0; }
+.pr-scratch-dates { font: 600 44px/1 'Cormorant Garamond', 'Noto Serif Devanagari', Georgia, serif; color: #B8952F; margin: 2px 0 0; }
 .pr-scratch-month { font: 600 13px/1.4 'Inter', 'Noto Sans Devanagari', sans-serif; letter-spacing: 2px; text-transform: uppercase; color: #6B6355; margin: 0 0 10px; }
 .pr-scratch-place { font: italic 400 15px/1.4 'Cormorant Garamond', 'Noto Serif Devanagari', Georgia, serif; color: #5B6B52; margin: 0 0 10px; }
 .pr-scratch-tag {
