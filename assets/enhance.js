@@ -300,55 +300,82 @@
   }
   var CORNER = '<svg viewBox="0 0 26 26" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M2 24V9Q2 2 9 2H24"/><path d="M7 24V13Q7 7 13 7H24" opacity=".55"/><circle cx="2" cy="2" r="1.6" fill="currentColor" stroke="none"/></svg>';
 
-  /* a stylized courtyard: stone arch + pillars, a two-tier fountain, rose bushes, topiary — all vector, nothing hotlinked */
+  /* a stylized courtyard: stone arch + pillars, a two-tier fountain, rose bushes, topiary —
+     all vector with real gradient shading for depth, nothing hotlinked */
+  var GARDEN_DEFS =
+    '<defs>' +
+    '<radialGradient id="prgTopiary" cx="32%" cy="26%" r="78%"><stop offset="0%" stop-color="#8CA178"/><stop offset="48%" stop-color="#52623F"/><stop offset="100%" stop-color="#232B18"/></radialGradient>' +
+    '<linearGradient id="prgPot" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#454A2E"/><stop offset="100%" stop-color="#171D0E"/></linearGradient>' +
+    '<linearGradient id="prgTrunk" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#6B7A54"/><stop offset="100%" stop-color="#333F22"/></linearGradient>' +
+    '<linearGradient id="prgStone" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#F7ECD2"/><stop offset="55%" stop-color="#E4CDA0"/><stop offset="100%" stop-color="#BE9D6C"/></linearGradient>' +
+    '<radialGradient id="prgRim" cx="38%" cy="28%" r="75%"><stop offset="0%" stop-color="#FFF0C2"/><stop offset="55%" stop-color="#E3B64E"/><stop offset="100%" stop-color="#A9792A"/></radialGradient>' +
+    '<radialGradient id="prgWater" cx="42%" cy="32%" r="70%"><stop offset="0%" stop-color="#F3FBF6"/><stop offset="55%" stop-color="#CDE8DC"/><stop offset="100%" stop-color="#93C3AE"/></radialGradient>' +
+    '<radialGradient id="prgRoseA" cx="32%" cy="26%" r="78%"><stop offset="0%" stop-color="#FFE3E6"/><stop offset="55%" stop-color="#E0738A"/><stop offset="100%" stop-color="#9B3A52"/></radialGradient>' +
+    '<radialGradient id="prgRoseB" cx="32%" cy="26%" r="78%"><stop offset="0%" stop-color="#FCEFC9"/><stop offset="55%" stop-color="#D9AE4E"/><stop offset="100%" stop-color="#A3762A"/></radialGradient>' +
+    '<linearGradient id="prgPillar" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#F3E1AE"/><stop offset="45%" stop-color="#C9A24A"/><stop offset="100%" stop-color="#8E6A24"/></linearGradient>' +
+    '<radialGradient id="prgArchGlow" cx="50%" cy="38%" r="62%"><stop offset="0%" stop-color="rgba(255,233,170,.65)"/><stop offset="100%" stop-color="rgba(255,233,170,0)"/></radialGradient>' +
+    '</defs>';
   function gardenSVG() {
     function rose(cx, cy, flip) {
       var sx = flip ? -1 : 1;
       var g = '<g transform="translate(' + cx + ',' + cy + ') scale(' + sx + ',1)">';
-      g += '<ellipse cx="0" cy="10" rx="26" ry="10" fill="rgba(62,74,51,.55)"/>';
-      var colors = ['#d98b91', '#c9576c', '#E8D5A0', '#d98b91', '#c9576c'];
-      var pts = [[-14, -2], [-5, -10], [6, -9], [14, -1], [0, -4]];
+      g += '<ellipse cx="0" cy="12" rx="30" ry="11" fill="rgba(35,43,24,.4)"/>';
+      g += '<path d="M-24 8 Q-15 -10 -2 2" stroke="#52623F" stroke-width="2.4" fill="none" opacity=".85"/>';
+      g += '<path d="M24 8 Q15 -10 2 2" stroke="#52623F" stroke-width="2.4" fill="none" opacity=".85"/>';
+      g += '<path d="M-14 9 Q-14 -2 -6 4" stroke="#3f4f38" stroke-width="2" fill="none" opacity=".7"/>';
+      var fills = ['prgRoseA', 'prgRoseB', 'prgRoseA', 'prgRoseB', 'prgRoseA', 'prgRoseA'];
+      var pts = [[-16, -1], [-6, -11], [7, -10], [16, 0], [0, -5], [-9, 5]];
+      var sizes = [6.6, 5.8, 6.2, 6, 7, 5.4];
       for (var i = 0; i < pts.length; i++) {
-        g += '<circle cx="' + pts[i][0] + '" cy="' + pts[i][1] + '" r="6.2" fill="' + colors[i] + '" opacity=".92"/>';
-        g += '<circle cx="' + pts[i][0] + '" cy="' + pts[i][1] + '" r="2.3" fill="#fff6e8" opacity=".55"/>';
+        g += '<circle cx="' + pts[i][0] + '" cy="' + pts[i][1] + '" r="' + sizes[i] + '" fill="url(#' + fills[i] + ')"/>';
+        g += '<circle cx="' + (pts[i][0] - sizes[i] * .28) + '" cy="' + (pts[i][1] - sizes[i] * .32) + '" r="' + (sizes[i] * .3) + '" fill="#fff6e8" opacity=".55"/>';
       }
-      g += '<path d="M-20 6 Q-12 -6 -2 2" stroke="#5B6B52" stroke-width="2" fill="none" opacity=".8"/>';
-      g += '<path d="M20 6 Q12 -6 2 2" stroke="#5B6B52" stroke-width="2" fill="none" opacity=".8"/>';
       return g + '</g>';
     }
     function topiary(cx, cy, s) {
       var g = '<g transform="translate(' + cx + ',' + cy + ') scale(' + s + ')">';
-      g += '<path d="M-9 40 L9 40 L7 26 L-7 26 Z" fill="#2A331F"/>';
-      g += '<rect x="-1.6" y="4" width="3.2" height="24" fill="#3f4f38"/>';
-      g += '<circle cx="0" cy="-6" r="19" fill="#4C5A40"/><circle cx="0" cy="-24" r="13" fill="#5B6B52"/><circle cx="0" cy="-38" r="8.5" fill="#4C5A40"/>';
+      g += '<ellipse cx="0" cy="42" rx="15" ry="4" fill="rgba(23,29,14,.35)"/>';
+      g += '<path d="M-9 40 L9 40 L7 26 L-7 26 Z" fill="url(#prgPot)"/>';
+      g += '<rect x="-6" y="27" width="12" height="2.4" fill="#5a6a42" opacity=".8"/>';
+      g += '<rect x="-1.7" y="4" width="3.4" height="24" fill="url(#prgTrunk)"/>';
+      g += '<circle cx="0" cy="-6" r="19.5" fill="url(#prgTopiary)"/><circle cx="0" cy="-24.5" r="13.5" fill="url(#prgTopiary)"/><circle cx="0" cy="-39" r="9" fill="url(#prgTopiary)"/>';
+      g += '<ellipse cx="-6" cy="-12" rx="7" ry="5" fill="#A8BB90" opacity=".4"/><ellipse cx="-4" cy="-29" rx="5" ry="3.5" fill="#A8BB90" opacity=".4"/>';
       for (var i = 0; i < 6; i++) {
         var a = (Math.PI * 2 * i) / 6;
-        g += '<circle cx="' + (Math.cos(a) * 13).toFixed(1) + '" cy="' + (-6 + Math.sin(a) * 13).toFixed(1) + '" r="1.3" fill="#E8D5A0"/>';
+        g += '<circle cx="' + (Math.cos(a) * 13).toFixed(1) + '" cy="' + (-6 + Math.sin(a) * 13).toFixed(1) + '" r="1.3" fill="#F3E1AE"/>';
       }
       return g + '</g>';
     }
     function pillar(x, flip) {
       var sx = flip ? -1 : 1;
       return '<g transform="translate(' + x + ',150) scale(' + sx + ',1)">' +
-        '<rect x="-5" y="-60" width="10" height="150" fill="rgba(184,149,47,.1)" stroke="#B8952F" stroke-width="1" opacity=".65"/>' +
-        '<path d="M-9 -60 L9 -60 L9 -68 Q0 -76 -9 -68 Z" fill="none" stroke="#B8952F" stroke-width="1" opacity=".65"/></g>';
+        '<rect x="-6" y="-60" width="12" height="150" fill="url(#prgPillar)" opacity=".85"/>' +
+        '<rect x="-6" y="-60" width="3" height="150" fill="#FFF3C8" opacity=".5"/>' +
+        '<path d="M-10 -60 L10 -60 L10 -69 Q0 -78 -10 -69 Z" fill="url(#prgPillar)" opacity=".9"/>' +
+        '<ellipse cx="0" cy="90" rx="13" ry="3.5" fill="rgba(139,106,36,.35)"/></g>';
     }
-    var fountain = '<g transform="translate(150,185)">' +
-      '<ellipse cx="0" cy="48" rx="54" ry="9" fill="rgba(139,117,30,.16)"/>' +
-      '<path d="M-40 34 L40 34 L34 14 L-34 14 Z" fill="#D9C4A0"/>' +
-      '<ellipse cx="0" cy="14" rx="34" ry="9" fill="#D4AF37" opacity=".9"/>' +
-      '<ellipse class="pr-rv-water" cx="0" cy="12" rx="27" ry="6.5" fill="#cfe3d8" opacity=".85"/>' +
-      '<rect x="-3.2" y="-28" width="6.4" height="40" fill="#B5A177"/>' +
-      '<ellipse cx="0" cy="-28" rx="16" ry="6" fill="#D4AF37" opacity=".9"/>' +
-      '<ellipse class="pr-rv-water" cx="0" cy="-29.5" rx="12" ry="4" fill="#cfe3d8" opacity=".85"/>' +
-      '<circle cx="0" cy="-34" r="2.4" fill="#D4AF37"/>' +
-      '<path d="M0 -36 C-10 -46 -4 -54 0 -60" stroke="#9FCBBB" stroke-width="1.6" fill="none" opacity=".75"/>' +
-      '<path d="M0 -36 C10 -46 4 -54 0 -60" stroke="#9FCBBB" stroke-width="1.6" fill="none" opacity=".75"/>' +
-      '<circle class="pr-rv-spray" cx="-5" cy="-58" r="1.6" fill="#9FCBBB" opacity=".8"/>' +
-      '<circle class="pr-rv-spray" cx="5" cy="-57" r="1.4" fill="#9FCBBB" opacity=".7"/>' +
-      '<circle class="pr-rv-spray" cx="0" cy="-63" r="1.6" fill="#9FCBBB" opacity=".85"/></g>';
-    var out = '<svg viewBox="0 0 300 300" aria-hidden="true">';
-    out += '<path d="M40 280 Q40 40 150 40 Q260 40 260 280" fill="none" stroke="#B8952F" stroke-width="2" opacity=".6"/>';
+    var fountain = '<g transform="translate(150,188)">' +
+      '<ellipse cx="0" cy="190" rx="0" ry="0"/>' +  // noop anchor (keeps numbering stable)
+      '<ellipse cx="0" cy="118" rx="92" ry="20" fill="url(#prgArchGlow)"/>' +
+      '<ellipse cx="0" cy="48" rx="56" ry="10" fill="rgba(139,106,36,.22)"/>' +
+      '<path d="M-40 34 L40 34 L34 12 L-34 12 Z" fill="url(#prgStone)"/>' +
+      '<path d="M-34 13 L34 13 L31 8 L-31 8 Z" fill="#fff" opacity=".25"/>' +
+      '<ellipse cx="0" cy="12" rx="34" ry="9" fill="url(#prgRim)"/>' +
+      '<ellipse class="pr-rv-water" cx="0" cy="11" rx="27" ry="6.5" fill="url(#prgWater)"/>' +
+      '<ellipse cx="-8" cy="9" rx="8" ry="2.2" fill="#fff" opacity=".5"/>' +
+      '<rect x="-3.4" y="-28" width="6.8" height="40" fill="url(#prgStone)"/>' +
+      '<ellipse cx="0" cy="-28" rx="16" ry="6" fill="url(#prgRim)"/>' +
+      '<ellipse class="pr-rv-water" cx="0" cy="-29" rx="12" ry="4" fill="url(#prgWater)"/>' +
+      '<circle cx="0" cy="-34" r="2.6" fill="url(#prgRim)"/>' +
+      '<path d="M0 -36 C-11 -47 -5 -55 0 -61" stroke="#BFE3D5" stroke-width="1.8" fill="none" opacity=".8"/>' +
+      '<path d="M0 -36 C11 -47 5 -55 0 -61" stroke="#BFE3D5" stroke-width="1.8" fill="none" opacity=".8"/>' +
+      '<circle class="pr-rv-spray" cx="-6" cy="-59" r="1.7" fill="#fff" opacity=".85"/>' +
+      '<circle class="pr-rv-spray" cx="6" cy="-58" r="1.5" fill="#fff" opacity=".75"/>' +
+      '<circle class="pr-rv-spray" cx="0" cy="-64" r="1.7" fill="#fff" opacity=".9"/></g>';
+    var out = '<svg viewBox="0 0 300 300" aria-hidden="true">' + GARDEN_DEFS;
+    out += '<ellipse cx="150" cy="130" rx="130" ry="110" fill="url(#prgArchGlow)" opacity=".5"/>';
+    out += '<path d="M40 280 Q40 40 150 40 Q260 40 260 280" fill="none" stroke="url(#prgPillar)" stroke-width="3" opacity=".75"/>';
+    out += '<path d="M40 280 Q40 40 150 40 Q260 40 260 280" fill="none" stroke="#FFF3C8" stroke-width="1" opacity=".5"/>';
     out += pillar(44, false) + pillar(256, true);
     out += rose(78, 205, false) + rose(222, 205, true);
     out += topiary(36, 240, .85) + topiary(264, 240, .85);

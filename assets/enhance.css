@@ -304,20 +304,36 @@ main div.justify-center.gap-3.py-1 > div.rounded-full { animation: prBob 4.5s ea
 #pr-reveal .pr-rv-gate {
   position: absolute; top: 0; bottom: 0; width: 50%; z-index: 2; backface-visibility: hidden; transform-style: preserve-3d; overflow: hidden;
   background:
-    repeating-linear-gradient(90deg, rgba(255,255,255,.55) 0 4px, transparent 4px 9px, rgba(120,95,50,.14) 9px 11px, transparent 11px 17px),
+    /* fine silk sheen */
+    repeating-linear-gradient(90deg, rgba(255,255,255,.6) 0 3px, transparent 3px 8px, rgba(110,85,40,.16) 8px 10px, transparent 10px 16px),
+    /* big swag folds — broad bands of light/shadow, like real draped fabric */
+    repeating-linear-gradient(90deg,
+      rgba(255,255,255,.35) 0 6%, rgba(205,172,108,.22) 6% 11%,
+      rgba(255,250,232,.3) 11% 20%, rgba(185,150,88,.26) 20% 25%,
+      rgba(255,250,232,.3) 25% 34%, rgba(205,172,108,.22) 34% 39%,
+      rgba(255,255,255,.35) 39% 48%, rgba(185,150,88,.26) 48% 53%,
+      rgba(255,250,232,.3) 53% 62%, rgba(205,172,108,.22) 62% 67%,
+      rgba(255,255,255,.35) 67% 76%, rgba(185,150,88,.26) 76% 81%,
+      rgba(255,250,232,.3) 81% 90%, rgba(205,172,108,.22) 90% 100%),
     linear-gradient(90deg, #F7EAC9 0%, #F0DEB2 55%, #E4CB90 100%);
-  box-shadow: inset 0 0 36px rgba(139,117,30,.16), inset 0 0 0 2px rgba(245,211,126,.7), inset 0 0 0 10px rgba(250,240,222,.6);
+  box-shadow: inset 0 0 44px rgba(139,117,30,.2), inset 0 0 0 2px rgba(245,211,126,.7), inset 0 0 0 10px rgba(250,240,222,.5);
 }
-#pr-reveal .pr-rv-gate::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 16px; background: linear-gradient(180deg, #f5d37e, #b8952f); box-shadow: 0 2px 10px rgba(0,0,0,.35); }
+#pr-reveal .pr-rv-gate::before {
+  content: ""; position: absolute; top: 0; left: 0; right: 0; height: 18px;
+  background: linear-gradient(180deg, #FFF3C8 0%, #E3B64E 45%, #9C7324 100%);
+  box-shadow: 0 3px 12px rgba(0,0,0,.4), inset 0 2px 0 rgba(255,255,255,.5);
+}
 #pr-reveal .pr-rv-gate::after { content: ""; position: absolute; top: 0; bottom: 0; width: 3px; background: linear-gradient(180deg, #f5d37e, #b8952f, #f5d37e); }
 #pr-reveal .pr-rv-gate.left { left: 0; transform-origin: left center; border-right: 2px solid #e5bd62; }
 #pr-reveal .pr-rv-gate.left::after { right: -1.5px; }
 #pr-reveal .pr-rv-gate.right { right: 0; transform-origin: right center; border-left: 2px solid #e5bd62; }
 #pr-reveal .pr-rv-gate.right::after { left: -1.5px; }
 #pr-reveal .pr-rv-fringe {
-  position: absolute; left: 0; right: 0; bottom: -1px; height: 20px;
-  background: repeating-radial-gradient(circle at 9px 0, #e5bd62 0 5px, transparent 5px 18px);
-  opacity: .92;
+  position: absolute; left: 0; right: 0; bottom: 0; height: 26px;
+  background:
+    repeating-linear-gradient(90deg, rgba(156,115,36,.9) 0 1.5px, transparent 1.5px 13px),
+    repeating-radial-gradient(circle at 6.5px 4px, #FFF3C8 0 2px, #E3B64E 2px 5px, transparent 5px 13px);
+  opacity: .95;
 }
 #pr-reveal .pr-rv-gate-shine {
   position: absolute; top: 0; bottom: 0; width: 45%; left: -65%; pointer-events: none;
