@@ -327,6 +327,19 @@ main div.justify-center.gap-3.py-1 > div.rounded-full { animation: prBob 4.5s ea
   background: repeating-radial-gradient(circle at 9px 0, #e5bd62 0 5px, transparent 5px 18px);
   opacity: .92;
 }
+#pr-reveal .pr-rv-gate-shine {
+  position: absolute; top: 0; bottom: 0; width: 45%; left: -65%; pointer-events: none;
+  background: linear-gradient(100deg, transparent, rgba(255,243,196,.4), transparent);
+  transform: skewX(-18deg); opacity: 0;
+}
+#pr-reveal.pr-on .pr-rv-gate-shine { animation: prGateShine 1s .18s ease-in-out forwards; }
+@keyframes prGateShine { 0% { left: -65%; opacity: 0; } 18% { opacity: 1; } 82% { opacity: 1; } 100% { left: 135%; opacity: 0; } }
+#pr-reveal .pr-rv-water { animation: prWaterShimmer 2.4s ease-in-out infinite; }
+#pr-reveal .pr-rv-spray { animation: prSprayTwinkle 1.6s ease-in-out infinite; }
+#pr-reveal .pr-rv-spray:nth-of-type(2) { animation-delay: .3s; }
+#pr-reveal .pr-rv-spray:nth-of-type(3) { animation-delay: .6s; }
+@keyframes prWaterShimmer { 0%, 100% { opacity: .85; } 50% { opacity: .55; } }
+@keyframes prSprayTwinkle { 0%, 100% { opacity: .35; } 50% { opacity: .95; } }
 #pr-reveal.pr-on .pr-rv-gate.left { animation: prGateLeft 1.15s .55s cubic-bezier(.3,.7,.2,1) forwards; }
 #pr-reveal.pr-on .pr-rv-gate.right { animation: prGateRight 1.15s .55s cubic-bezier(.3,.7,.2,1) forwards; }
 @keyframes prGateLeft { 0% { transform: rotateY(0deg); } 100% { transform: rotateY(-108deg); opacity: .001; } }
@@ -384,7 +397,8 @@ main div.justify-center.gap-3.py-1 > div.rounded-full { animation: prBob 4.5s ea
   #pr-reveal.pr-on { animation: none; clip-path: none; }
   .pr-rv-invoke, .pr-rv-line, .pr-rv-place, .pr-rv-names, .pr-rv-skip { opacity: 1 !important; animation: none !important; }
   .pr-rv-line { width: 200px; }
-  .pr-rv-garden, .pr-rv-lamp, .pr-rv-rays { opacity: 1 !important; animation: none !important; transition: none !important; }
+  .pr-rv-garden, .pr-rv-lamp, .pr-rv-rays, .pr-rv-water, .pr-rv-spray { opacity: 1 !important; animation: none !important; transition: none !important; }
+  .pr-rv-gate-shine { display: none !important; }
   .pr-rv-gate.left, .pr-rv-gate.right { animation: none !important; opacity: 0 !important; }
   .pr-rv-petal { display: none !important; }
 }

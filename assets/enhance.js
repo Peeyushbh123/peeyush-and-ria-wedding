@@ -346,14 +346,16 @@
       '<ellipse cx="0" cy="48" rx="54" ry="9" fill="rgba(26,33,22,.35)"/>' +
       '<path d="M-40 34 L40 34 L34 14 L-34 14 Z" fill="#4C5A40"/>' +
       '<ellipse cx="0" cy="14" rx="34" ry="9" fill="#E8D5A0" opacity=".9"/>' +
-      '<ellipse cx="0" cy="12" rx="27" ry="6.5" fill="#cfe3d8" opacity=".85"/>' +
+      '<ellipse class="pr-rv-water" cx="0" cy="12" rx="27" ry="6.5" fill="#cfe3d8" opacity=".85"/>' +
       '<rect x="-3.2" y="-28" width="6.4" height="40" fill="#5B6B52"/>' +
       '<ellipse cx="0" cy="-28" rx="16" ry="6" fill="#E8D5A0" opacity=".9"/>' +
-      '<ellipse cx="0" cy="-29.5" rx="12" ry="4" fill="#cfe3d8" opacity=".85"/>' +
+      '<ellipse class="pr-rv-water" cx="0" cy="-29.5" rx="12" ry="4" fill="#cfe3d8" opacity=".85"/>' +
       '<circle cx="0" cy="-34" r="2.4" fill="#E8D5A0"/>' +
       '<path d="M0 -36 C-10 -46 -4 -54 0 -60" stroke="#cfe3d8" stroke-width="1.6" fill="none" opacity=".75"/>' +
       '<path d="M0 -36 C10 -46 4 -54 0 -60" stroke="#cfe3d8" stroke-width="1.6" fill="none" opacity=".75"/>' +
-      '<circle cx="-5" cy="-58" r="1.6" fill="#fff" opacity=".8"/><circle cx="5" cy="-57" r="1.4" fill="#fff" opacity=".7"/><circle cx="0" cy="-63" r="1.6" fill="#fff" opacity=".85"/></g>';
+      '<circle class="pr-rv-spray" cx="-5" cy="-58" r="1.6" fill="#fff" opacity=".8"/>' +
+      '<circle class="pr-rv-spray" cx="5" cy="-57" r="1.4" fill="#fff" opacity=".7"/>' +
+      '<circle class="pr-rv-spray" cx="0" cy="-63" r="1.6" fill="#fff" opacity=".85"/></g>';
     var out = '<svg viewBox="0 0 300 300" aria-hidden="true">';
     out += '<path d="M40 280 Q40 40 150 40 Q260 40 260 280" fill="none" stroke="#E8D5A0" stroke-width="2" opacity=".55"/>';
     out += pillar(44, false) + pillar(256, true);
@@ -427,7 +429,8 @@
     rv.innerHTML = '<div class="pr-rv-halo"></div><div class="pr-rv-mandala pr-rv-garden">' + gardenSVG() + '</div>' +
       '<div class="pr-rv-rays"></div>' +
       '<div class="pr-rv-gate-scene"><i class="pr-rv-lamp left"></i><i class="pr-rv-lamp right"></i>' +
-      '<div class="pr-rv-gate left"><i class="pr-rv-fringe"></i></div><div class="pr-rv-gate right"><i class="pr-rv-fringe"></i></div></div>' +
+      '<div class="pr-rv-gate left"><i class="pr-rv-fringe"></i><i class="pr-rv-gate-shine"></i></div>' +
+      '<div class="pr-rv-gate right"><i class="pr-rv-fringe"></i><i class="pr-rv-gate-shine"></i></div></div>' +
       '<div class="pr-rv-petals">' + petals + '</div>' +
       '<div class="pr-rv-content"><div class="pr-rv-invoke"></div><h2 class="pr-rv-names"></h2><div class="pr-rv-line"></div>' +
       '<div class="pr-rv-place"></div></div><div class="pr-rv-skip"></div>';
@@ -484,10 +487,12 @@
         if (!fx) return;
         for (var i = 0; i < 2; i++) fx.spark(innerWidth * (.1 + Math.random() * .8), innerHeight * (.12 + Math.random() * .6));
       }, 120);
-      setTimeout(function () { if (fx && !revealDone) fx.burst(innerWidth * .5, innerHeight * .46, 80, 1.05); }, 1650);
+      // light breaking through as the curtains part, then a bigger burst once the names land
+      setTimeout(function () { if (fx && !revealDone) fx.burst(innerWidth * .5, innerHeight * .46, 45, .8); }, 950);
+      setTimeout(function () { if (fx && !revealDone) fx.burst(innerWidth * .5, innerHeight * .46, 90, 1.1); }, 1650);
       setTimeout(function () { canSkip = true; }, 1900);
       exitTimer = setTimeout(exitReveal, 3700);
-    }, 750);
+    }, 280);
   }
 
   function exitReveal() {
