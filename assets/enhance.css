@@ -104,12 +104,12 @@ main div.justify-center.gap-3.py-1 > div.rounded-full { animation: prBob 4.5s ea
   border: 1px solid rgba(232,213,160,.6); box-shadow: inset 0 1px 0 rgba(255,255,255,.8), 0 14px 30px rgba(62,74,51,.14);
 }
 .pr-scratch-reveal { display: block; }
-.pr-scratch-photo { display: block; width: 100%; height: auto; max-height: 62vh; object-fit: cover; aspect-ratio: 736 / 1103; }
-.pr-scratch-caption { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 16px; text-align: center; }
-.pr-scratch-heading { font: 600 20px/1.2 'Playfair Display', 'Noto Serif Devanagari', Georgia, serif; color: #3E4A33; margin: 0 0 6px; }
-.pr-scratch-dates { font: 600 44px/1 'Cormorant Garamond', 'Noto Serif Devanagari', Georgia, serif; color: #B8952F; margin: 2px 0 0; }
-.pr-scratch-month { font: 600 13px/1.4 'Inter', 'Noto Sans Devanagari', sans-serif; letter-spacing: 2px; text-transform: uppercase; color: #6B6355; margin: 0 0 10px; }
-.pr-scratch-place { font: italic 400 15px/1.4 'Cormorant Garamond', 'Noto Serif Devanagari', Georgia, serif; color: #5B6B52; margin: 0 0 10px; }
+.pr-scratch-photo { display: block; width: 100%; height: auto; max-height: 40vh; object-fit: cover; object-position: 50% 22%; aspect-ratio: 1 / 0.88; }
+.pr-scratch-caption { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 14px; text-align: center; }
+.pr-scratch-heading { font: 600 17px/1.2 'Playfair Display', 'Noto Serif Devanagari', Georgia, serif; color: #3E4A33; margin: 0 0 2px; }
+.pr-scratch-dates { font: 600 34px/1 'Cormorant Garamond', 'Noto Serif Devanagari', Georgia, serif; color: #B8952F; margin: 0; }
+.pr-scratch-month { font: 600 11px/1.3 'Inter', 'Noto Sans Devanagari', sans-serif; letter-spacing: 2px; text-transform: uppercase; color: #6B6355; margin: 0 0 6px; }
+.pr-scratch-place { font: italic 400 13px/1.3 'Cormorant Garamond', 'Noto Serif Devanagari', Georgia, serif; color: #5B6B52; margin: 0 0 6px; }
 .pr-scratch-tag {
   font: 600 12px/1 'Inter', sans-serif; letter-spacing: 1.5px; color: #B8952F; background: #FFFBF0;
   border: 1px solid rgba(232,213,160,.7); border-radius: 999px; padding: 6px 14px; margin: 0;
