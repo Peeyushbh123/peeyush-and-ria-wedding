@@ -433,7 +433,7 @@
       '<div class="pr-rv-gate left"><i class="pr-rv-fringe"></i></div><div class="pr-rv-gate right"><i class="pr-rv-fringe"></i></div></div>' +
       '<div class="pr-rv-petals">' + petals + '</div>' +
       '<div class="pr-rv-content"><div class="pr-rv-invoke"></div><h2 class="pr-rv-names"></h2><div class="pr-rv-line"></div>' +
-      '<div class="pr-rv-date"></div><div class="pr-rv-place"></div></div><div class="pr-rv-skip"></div>';
+      '<div class="pr-rv-place"></div></div><div class="pr-rv-skip"></div>';
     document.body.appendChild(rv);
     wave = document.createElement('div'); wave.id = 'pr-wave'; wave.setAttribute('aria-hidden', 'true');
     document.body.appendChild(wave);
@@ -444,7 +444,6 @@
     var hi = isHindi();
     rv.querySelector('.pr-rv-invoke').textContent = hi ? '॥ श्री गणेशाय नमः ॥' : '॥ Shree Ganeshaya Namah ॥';
     rv.querySelector('.pr-rv-names').textContent = hi ? 'पीयूष & रिया' : 'Peeyush & Ria';
-    rv.querySelector('.pr-rv-date').textContent = hi ? '14 · 15 · 16 फरवरी 2027' : '14 · 15 · 16 February 2027';
     rv.querySelector('.pr-rv-place').textContent = hi ? 'जयपुर, राजस्थान' : 'Jaipur, Rajasthan';
     rv.querySelector('.pr-rv-skip').textContent = hi ? 'आगे बढ़ने के लिए टैप करें' : 'Tap to continue';
   }

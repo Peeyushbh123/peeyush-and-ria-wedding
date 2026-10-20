@@ -326,7 +326,7 @@ main div.justify-center.gap-3.py-1 > div.rounded-full { animation: prBob 4.5s ea
 }
 
 .pr-rv-content { position: relative; z-index: 2; width: 100%; padding: 0 22px; text-align: center; margin-top: -4vh; }
-.pr-rv-invoke, .pr-rv-line, .pr-rv-date, .pr-rv-place, .pr-rv-names { opacity: 0; }
+.pr-rv-invoke, .pr-rv-line, .pr-rv-place, .pr-rv-names { opacity: 0; }
 .pr-rv-invoke { font: 500 15px/1.4 'Noto Serif Devanagari', 'Cormorant Garamond', Georgia, serif; letter-spacing: 2px; color: #E8D5A0; margin-bottom: 18px; }
 #pr-reveal.pr-on .pr-rv-invoke { animation: prUp .9s cubic-bezier(.2,.7,.2,1) .55s forwards; }
 .pr-rv-names { font-family: 'Great Vibes', 'Noto Serif Devanagari', 'Snell Roundhand', 'Brush Script MT', cursive; font-weight: 400; margin: 0;
@@ -340,10 +340,8 @@ main div.justify-center.gap-3.py-1 > div.rounded-full { animation: prBob 4.5s ea
 .pr-rv-line::after { content: "✦"; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -52%); color: #D4AF37; font-size: 13px; background: #243018; padding: 0 8px; }
 #pr-reveal.pr-on .pr-rv-line { animation: prLine 1s cubic-bezier(.2,.7,.2,1) 1.9s forwards; }
 @keyframes prLine { from { opacity: 0; width: 0; } to { opacity: 1; width: min(66vw, 280px); } }
-.pr-rv-date { font: 600 13px/1.4 'Inter', 'Noto Sans Devanagari', sans-serif; letter-spacing: 6px; text-transform: uppercase; color: #FFF3C4; }
 .pr-rv-place { margin-top: 8px; font: italic 400 16px/1.4 'Cormorant Garamond', 'Noto Serif Devanagari', Georgia, serif; color: #E8D5A0; letter-spacing: 1.5px; }
-#pr-reveal.pr-on .pr-rv-date  { animation: prUp .9s cubic-bezier(.2,.7,.2,1) 2.15s forwards; }
-#pr-reveal.pr-on .pr-rv-place { animation: prUp .9s cubic-bezier(.2,.7,.2,1) 2.4s forwards; }
+#pr-reveal.pr-on .pr-rv-place { animation: prUp .9s cubic-bezier(.2,.7,.2,1) 2.15s forwards; }
 @keyframes prUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
 .pr-rv-skip { position: absolute; left: 0; right: 0; bottom: calc(26px + env(safe-area-inset-bottom, 0px)); text-align: center; z-index: 3;
   font: 600 10px/1 'Inter', 'Noto Sans Devanagari', sans-serif; letter-spacing: 3px; text-transform: uppercase; color: rgba(232,213,160,.6); opacity: 0; }
@@ -364,7 +362,7 @@ main div.justify-center.gap-3.py-1 > div.rounded-full { animation: prBob 4.5s ea
 @media (prefers-reduced-motion: reduce) {
   .pr-cover > .pr-cover-glow, .pr-seal-ring, .pr-seal-glow, .pr-seal-glow::before, .pr-dust i, .pr-mandala-spin { animation: none !important; }
   #pr-reveal.pr-on { animation: none; clip-path: none; }
-  .pr-rv-invoke, .pr-rv-line, .pr-rv-date, .pr-rv-place, .pr-rv-names, .pr-rv-skip { opacity: 1 !important; animation: none !important; }
+  .pr-rv-invoke, .pr-rv-line, .pr-rv-place, .pr-rv-names, .pr-rv-skip { opacity: 1 !important; animation: none !important; }
   .pr-rv-line { width: 200px; }
   .pr-rv-garden, .pr-rv-lamp, .pr-rv-rays { opacity: 1 !important; animation: none !important; transition: none !important; }
   .pr-rv-gate.left, .pr-rv-gate.right { animation: none !important; opacity: 0 !important; }
