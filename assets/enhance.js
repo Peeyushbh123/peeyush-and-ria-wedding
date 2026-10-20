@@ -309,6 +309,60 @@
   }
   var CORNER = '<svg viewBox="0 0 26 26" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M2 24V9Q2 2 9 2H24"/><path d="M7 24V13Q7 7 13 7H24" opacity=".55"/><circle cx="2" cy="2" r="1.6" fill="currentColor" stroke="none"/></svg>';
 
+  /* a stylized courtyard: stone arch + pillars, a two-tier fountain, rose bushes, topiary — all vector, nothing hotlinked */
+  function gardenSVG() {
+    function rose(cx, cy, flip) {
+      var sx = flip ? -1 : 1;
+      var g = '<g transform="translate(' + cx + ',' + cy + ') scale(' + sx + ',1)">';
+      g += '<ellipse cx="0" cy="10" rx="26" ry="10" fill="rgba(62,74,51,.55)"/>';
+      var colors = ['#d98b91', '#c9576c', '#E8D5A0', '#d98b91', '#c9576c'];
+      var pts = [[-14, -2], [-5, -10], [6, -9], [14, -1], [0, -4]];
+      for (var i = 0; i < pts.length; i++) {
+        g += '<circle cx="' + pts[i][0] + '" cy="' + pts[i][1] + '" r="6.2" fill="' + colors[i] + '" opacity=".92"/>';
+        g += '<circle cx="' + pts[i][0] + '" cy="' + pts[i][1] + '" r="2.3" fill="#fff6e8" opacity=".55"/>';
+      }
+      g += '<path d="M-20 6 Q-12 -6 -2 2" stroke="#5B6B52" stroke-width="2" fill="none" opacity=".8"/>';
+      g += '<path d="M20 6 Q12 -6 2 2" stroke="#5B6B52" stroke-width="2" fill="none" opacity=".8"/>';
+      return g + '</g>';
+    }
+    function topiary(cx, cy, s) {
+      var g = '<g transform="translate(' + cx + ',' + cy + ') scale(' + s + ')">';
+      g += '<path d="M-9 40 L9 40 L7 26 L-7 26 Z" fill="#2A331F"/>';
+      g += '<rect x="-1.6" y="4" width="3.2" height="24" fill="#3f4f38"/>';
+      g += '<circle cx="0" cy="-6" r="19" fill="#4C5A40"/><circle cx="0" cy="-24" r="13" fill="#5B6B52"/><circle cx="0" cy="-38" r="8.5" fill="#4C5A40"/>';
+      for (var i = 0; i < 6; i++) {
+        var a = (Math.PI * 2 * i) / 6;
+        g += '<circle cx="' + (Math.cos(a) * 13).toFixed(1) + '" cy="' + (-6 + Math.sin(a) * 13).toFixed(1) + '" r="1.3" fill="#E8D5A0"/>';
+      }
+      return g + '</g>';
+    }
+    function pillar(x, flip) {
+      var sx = flip ? -1 : 1;
+      return '<g transform="translate(' + x + ',150) scale(' + sx + ',1)">' +
+        '<rect x="-5" y="-60" width="10" height="150" fill="rgba(232,213,160,.14)" stroke="#E8D5A0" stroke-width="1" opacity=".6"/>' +
+        '<path d="M-9 -60 L9 -60 L9 -68 Q0 -76 -9 -68 Z" fill="none" stroke="#E8D5A0" stroke-width="1" opacity=".6"/></g>';
+    }
+    var fountain = '<g transform="translate(150,185)">' +
+      '<ellipse cx="0" cy="48" rx="54" ry="9" fill="rgba(26,33,22,.35)"/>' +
+      '<path d="M-40 34 L40 34 L34 14 L-34 14 Z" fill="#4C5A40"/>' +
+      '<ellipse cx="0" cy="14" rx="34" ry="9" fill="#E8D5A0" opacity=".9"/>' +
+      '<ellipse cx="0" cy="12" rx="27" ry="6.5" fill="#cfe3d8" opacity=".85"/>' +
+      '<rect x="-3.2" y="-28" width="6.4" height="40" fill="#5B6B52"/>' +
+      '<ellipse cx="0" cy="-28" rx="16" ry="6" fill="#E8D5A0" opacity=".9"/>' +
+      '<ellipse cx="0" cy="-29.5" rx="12" ry="4" fill="#cfe3d8" opacity=".85"/>' +
+      '<circle cx="0" cy="-34" r="2.4" fill="#E8D5A0"/>' +
+      '<path d="M0 -36 C-10 -46 -4 -54 0 -60" stroke="#cfe3d8" stroke-width="1.6" fill="none" opacity=".75"/>' +
+      '<path d="M0 -36 C10 -46 4 -54 0 -60" stroke="#cfe3d8" stroke-width="1.6" fill="none" opacity=".75"/>' +
+      '<circle cx="-5" cy="-58" r="1.6" fill="#fff" opacity=".8"/><circle cx="5" cy="-57" r="1.4" fill="#fff" opacity=".7"/><circle cx="0" cy="-63" r="1.6" fill="#fff" opacity=".85"/></g>';
+    var out = '<svg viewBox="0 0 300 300" aria-hidden="true">';
+    out += '<path d="M40 280 Q40 40 150 40 Q260 40 260 280" fill="none" stroke="#E8D5A0" stroke-width="2" opacity=".55"/>';
+    out += pillar(44, false) + pillar(256, true);
+    out += rose(78, 205, false) + rose(222, 205, true);
+    out += topiary(36, 240, .85) + topiary(264, 240, .85);
+    out += fountain;
+    return out + '</svg>';
+  }
+
   var coverEl = null, sealBtn = null;
   function setupCover() {
     sealBtn = document.querySelector('button[aria-label^="Open invitation"]');
@@ -319,6 +373,9 @@
 
     var glow = document.createElement('div'); glow.className = 'pr-cover-glow'; glow.setAttribute('aria-hidden', 'true');
     coverEl.insertBefore(glow, coverEl.firstChild);
+
+    var ribbon = document.createElement('div'); ribbon.className = 'pr-cover-ribbon'; ribbon.setAttribute('aria-hidden', 'true');
+    coverEl.insertBefore(ribbon, coverEl.firstChild);
 
     var flap = coverEl.querySelector('div[style*="clip-path"]');
     if (flap) {
@@ -370,10 +427,10 @@
           (Math.random() * 1.3).toFixed(2) + 's;--rz:' + (Math.random() * 40 - 20).toFixed(0) + 'deg"></i>';
       }
     }
-    rv.innerHTML = '<div class="pr-rv-halo"></div><div class="pr-rv-mandala">' + mandalaSVG(.9) + '</div>' +
+    rv.innerHTML = '<div class="pr-rv-halo"></div><div class="pr-rv-mandala pr-rv-garden">' + gardenSVG() + '</div>' +
       '<div class="pr-rv-rays"></div>' +
-      '<div class="pr-rv-gate-scene"><div class="pr-rv-arch"></div><i class="pr-rv-lamp left"></i><i class="pr-rv-lamp right"></i>' +
-      '<div class="pr-rv-gate left"></div><div class="pr-rv-gate right"></div></div>' +
+      '<div class="pr-rv-gate-scene"><i class="pr-rv-lamp left"></i><i class="pr-rv-lamp right"></i>' +
+      '<div class="pr-rv-gate left"><i class="pr-rv-fringe"></i></div><div class="pr-rv-gate right"><i class="pr-rv-fringe"></i></div></div>' +
       '<div class="pr-rv-petals">' + petals + '</div>' +
       '<div class="pr-rv-content"><div class="pr-rv-invoke"></div><h2 class="pr-rv-names"></h2><div class="pr-rv-line"></div>' +
       '<div class="pr-rv-date"></div><div class="pr-rv-place"></div></div><div class="pr-rv-skip"></div>';
