@@ -718,7 +718,7 @@
     eyebrow: ['A little surprise', 'एक छोटी सी सौगात'],
     prompt: ['Scratch to reveal', 'स्क्रैच करें'],
     heading: ['Save the Date', 'यह तारीख सहेजें'],
-    dates: ['14 · 15 · 16', '14 · 15 · 16'],
+    dates: ['16', '16'],
     month: ['February 2027', 'फरवरी 2027'],
     place: ['Jaipur, Rajasthan', 'जयपुर, राजस्थान'],
     tag: ['#PyaaRkaaSafar', '#PyaaRkaaSafar'],

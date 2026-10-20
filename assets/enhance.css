@@ -105,8 +105,8 @@ main div.justify-center.gap-3.py-1 > div.rounded-full { animation: prBob 4.5s ea
 }
 .pr-scratch-reveal { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; padding: 16px; }
 .pr-scratch-heading { font: 600 20px/1.2 'Playfair Display', 'Noto Serif Devanagari', Georgia, serif; color: #3E4A33; margin: 0 0 6px; }
-.pr-scratch-dates { font: 600 30px/1 'Cormorant Garamond', 'Noto Serif Devanagari', Georgia, serif; color: #B8952F; margin: 0; }
-.pr-scratch-month { font: 600 13px/1.4 'Inter', 'Noto Sans Devanagari', sans-serif; letter-spacing: 2px; text-transform: uppercase; color: #6B6355; margin: 2px 0 10px; }
+.pr-scratch-dates { font: 600 54px/1 'Cormorant Garamond', 'Noto Serif Devanagari', Georgia, serif; color: #B8952F; margin: 2px 0 0; }
+.pr-scratch-month { font: 600 13px/1.4 'Inter', 'Noto Sans Devanagari', sans-serif; letter-spacing: 2px; text-transform: uppercase; color: #6B6355; margin: 0 0 10px; }
 .pr-scratch-place { font: italic 400 15px/1.4 'Cormorant Garamond', 'Noto Serif Devanagari', Georgia, serif; color: #5B6B52; margin: 0 0 10px; }
 .pr-scratch-tag {
   font: 600 12px/1 'Inter', sans-serif; letter-spacing: 1.5px; color: #B8952F; background: #FFFBF0;
