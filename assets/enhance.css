@@ -268,69 +268,39 @@ main div.justify-center.gap-3.py-1 > div.rounded-full { animation: prBob 4.5s ea
 
 /* ---------- Royal reveal (after the seal is tapped) ---------- */
 #pr-reveal {
-  position: fixed; inset: 0; z-index: 99998; display: none; align-items: center; justify-content: center; overflow: hidden; color: #3E4A33;
-  background: radial-gradient(ellipse 90% 70% at 50% 42%, #FFFDF5 0%, #FFF3D9 55%, #F6E4BE 100%);
+  position: fixed; inset: 0; z-index: 99998; display: none; align-items: center; justify-content: center; overflow: hidden; color: #FFF3C4;
+  background: radial-gradient(ellipse 90% 70% at 50% 42%, #3A4530 0%, #22291A 55%, #141A0F 100%);
   clip-path: circle(0 at var(--sx, 50%) var(--sy, 40%)); will-change: clip-path, opacity, transform;
 }
 #pr-reveal.pr-on { display: flex; animation: prIris .95s cubic-bezier(.5,.02,.2,1) forwards, prDolly 1.8s cubic-bezier(.2,.7,.2,1) forwards; }
 @keyframes prIris { to { clip-path: circle(150% at var(--sx, 50%) var(--sy, 40%)); } }
-@keyframes prDolly { 0% { transform: scale(1.1); filter: blur(3px); } 100% { transform: scale(1); filter: blur(0); } }
-#pr-reveal.pr-out { animation: prOut .95s cubic-bezier(.4,0,.2,1) forwards; clip-path: circle(150% at 50% 50%); }
-@keyframes prOut { 0% { opacity: 1; transform: scale(1); filter: none; } 100% { opacity: 0; transform: scale(1.14); filter: blur(6px); } }
+@keyframes prDolly { 0% { transform: scale(1.08); } 100% { transform: scale(1); } }
+#pr-reveal.pr-out { animation: prOut .8s cubic-bezier(.4,0,.2,1) forwards; clip-path: circle(150% at 50% 50%); }
+@keyframes prOut { 0% { opacity: 1; transform: scale(1); } 100% { opacity: 0; transform: scale(1.1); } }
 
 #pr-reveal .pr-rv-mandala { position: absolute; left: 50%; top: 42%; width: min(150vw, 760px); transform: translate(-50%, -50%); opacity: .5; }
 #pr-reveal .pr-rv-mandala svg { width: 100%; height: auto; display: block; }
 #pr-reveal .pr-rv-mandala .pr-mandala-spin { animation-duration: 60s; }
-#pr-reveal .pr-rv-garden {
-  width: min(108vw, 480px); opacity: 0; transform: translate(-50%, -50%) scale(1.22); filter: blur(5px);
-  transition: opacity 1.3s ease .35s, transform 1.3s cubic-bezier(.2,.7,.2,1) .35s, filter 1.3s ease .35s;
-}
-#pr-reveal.pr-on .pr-rv-garden { opacity: .96; transform: translate(-50%, -50%) scale(1); filter: blur(0); }
 #pr-reveal .pr-rv-halo { position: absolute; left: 50%; top: 42%; width: 130vw; max-width: 640px; aspect-ratio: 1; transform: translate(-50%, -50%);
-  background: radial-gradient(circle, rgba(255,214,121,.22), rgba(212,175,55,.05) 42%, transparent 66%); animation: prBreathe 4s ease-in-out infinite; }
-#pr-reveal:before { content: ""; position: absolute; inset: 14px; border: 1px solid rgba(139,117,30,.3); outline: 1px solid rgba(139,117,30,.12); outline-offset: 6px; pointer-events: none; }
+  background: radial-gradient(circle, rgba(255,214,121,.3), rgba(212,175,55,.06) 42%, transparent 66%); animation: prBreathe 4s ease-in-out infinite; }
+#pr-reveal:before { content: ""; position: absolute; inset: 14px; border: 1px solid rgba(226,190,92,.45); outline: 1px solid rgba(226,190,92,.15); outline-offset: 6px; pointer-events: none; }
 
-/* ---------- Curtains parting on a garden courtyard (self-contained — no external images) ---------- */
+/* ---------- Curtains parting (self-contained, simplified gradients for smoother animation) ---------- */
 #pr-reveal .pr-rv-gate-scene { position: absolute; inset: 0; overflow: hidden; z-index: 1; }
 
-#pr-reveal .pr-rv-lamp {
-  position: absolute; top: 30%; width: 7px; height: 22px; border-radius: 50%; background: #fff1b0;
-  box-shadow: 0 0 10px 4px rgba(255,193,77,.55), 0 0 22px 8px rgba(255,161,55,.15); opacity: 0;
-}
-#pr-reveal .pr-rv-lamp.left { left: calc(50% - min(39vw, 170px) - 3px); }
-#pr-reveal .pr-rv-lamp.right { right: calc(50% - min(39vw, 170px) - 3px); }
-#pr-reveal.pr-on .pr-rv-lamp { animation: prLampGlow 1.4s .5s ease-out forwards; }
-@keyframes prLampGlow { from { opacity: 0; } to { opacity: 1; } }
-
-#pr-reveal .pr-rv-finial { transform-box: fill-box; transform-origin: 50% 100%; filter: drop-shadow(0 0 0 rgba(212,175,55,0)); }
-#pr-reveal.pr-on .pr-rv-finial { animation: prFinialGlow 3.2s ease-in-out .9s infinite; }
-@keyframes prFinialGlow {
-  0%, 100% { filter: drop-shadow(0 0 1px rgba(212,175,55,.3)); }
-  50% { filter: drop-shadow(0 0 6px rgba(212,175,55,.85)); }
-}
-
-/* curtain panels: vertical fabric pleats + gold valance rod + a hanging tassel fringe */
+/* curtain panels: a single light fine-pleat pattern + plain dark gradient base — kept simple so
+   the browser isn't repainting a heavy multi-stop gradient every frame during the rotateY animation */
 #pr-reveal .pr-rv-gate {
   position: absolute; top: 0; bottom: 0; width: 50%; z-index: 2; backface-visibility: hidden; transform-style: preserve-3d; overflow: hidden;
   background:
-    /* fine silk sheen */
-    repeating-linear-gradient(90deg, rgba(255,255,255,.6) 0 3px, transparent 3px 8px, rgba(110,85,40,.16) 8px 10px, transparent 10px 16px),
-    /* big swag folds — broad bands of light/shadow, like real draped fabric */
-    repeating-linear-gradient(90deg,
-      rgba(255,255,255,.35) 0 6%, rgba(205,172,108,.22) 6% 11%,
-      rgba(255,250,232,.3) 11% 20%, rgba(185,150,88,.26) 20% 25%,
-      rgba(255,250,232,.3) 25% 34%, rgba(205,172,108,.22) 34% 39%,
-      rgba(255,255,255,.35) 39% 48%, rgba(185,150,88,.26) 48% 53%,
-      rgba(255,250,232,.3) 53% 62%, rgba(205,172,108,.22) 62% 67%,
-      rgba(255,255,255,.35) 67% 76%, rgba(185,150,88,.26) 76% 81%,
-      rgba(255,250,232,.3) 81% 90%, rgba(205,172,108,.22) 90% 100%),
-    linear-gradient(90deg, #F7EAC9 0%, #F0DEB2 55%, #E4CB90 100%);
-  box-shadow: inset 0 0 44px rgba(139,117,30,.2), inset 0 0 0 2px rgba(245,211,126,.7), inset 0 0 0 10px rgba(250,240,222,.5);
+    repeating-linear-gradient(90deg, rgba(255,255,255,.08) 0 4px, transparent 4px 10px, rgba(0,0,0,.2) 10px 12px, transparent 12px 18px),
+    linear-gradient(90deg, #333F22 0%, #22291A 55%, #141A0F 100%);
+  box-shadow: inset 0 0 36px rgba(0,0,0,.4), inset 0 0 0 2px rgba(245,211,126,.5), inset 0 0 0 10px rgba(20,26,15,.5);
 }
 #pr-reveal .pr-rv-gate::before {
-  content: ""; position: absolute; top: 0; left: 0; right: 0; height: 18px;
-  background: linear-gradient(180deg, #FFF3C8 0%, #E3B64E 45%, #9C7324 100%);
-  box-shadow: 0 3px 12px rgba(0,0,0,.4), inset 0 2px 0 rgba(255,255,255,.5);
+  content: ""; position: absolute; top: 0; left: 0; right: 0; height: 16px;
+  background: linear-gradient(180deg, #f5d37e, #9C7324);
+  box-shadow: 0 2px 10px rgba(0,0,0,.4);
 }
 #pr-reveal .pr-rv-gate::after { content: ""; position: absolute; top: 0; bottom: 0; width: 3px; background: linear-gradient(180deg, #f5d37e, #b8952f, #f5d37e); }
 #pr-reveal .pr-rv-gate.left { left: 0; transform-origin: left center; border-right: 2px solid #e5bd62; }
@@ -338,25 +308,10 @@ main div.justify-center.gap-3.py-1 > div.rounded-full { animation: prBob 4.5s ea
 #pr-reveal .pr-rv-gate.right { right: 0; transform-origin: right center; border-left: 2px solid #e5bd62; }
 #pr-reveal .pr-rv-gate.right::after { left: -1.5px; }
 #pr-reveal .pr-rv-fringe {
-  position: absolute; left: 0; right: 0; bottom: 0; height: 26px;
-  background:
-    repeating-linear-gradient(90deg, rgba(156,115,36,.9) 0 1.5px, transparent 1.5px 13px),
-    repeating-radial-gradient(circle at 6.5px 4px, #FFF3C8 0 2px, #E3B64E 2px 5px, transparent 5px 13px);
-  opacity: .95;
+  position: absolute; left: 0; right: 0; bottom: 0; height: 22px;
+  background: repeating-radial-gradient(circle at 9px 0, #e5bd62 0 5px, transparent 5px 18px);
+  opacity: .9;
 }
-#pr-reveal .pr-rv-gate-shine {
-  position: absolute; top: 0; bottom: 0; width: 45%; left: -65%; pointer-events: none;
-  background: linear-gradient(100deg, transparent, rgba(255,243,196,.4), transparent);
-  transform: skewX(-18deg); opacity: 0;
-}
-#pr-reveal.pr-on .pr-rv-gate-shine { animation: prGateShine 1s .18s ease-in-out forwards; }
-@keyframes prGateShine { 0% { left: -65%; opacity: 0; } 18% { opacity: 1; } 82% { opacity: 1; } 100% { left: 135%; opacity: 0; } }
-#pr-reveal .pr-rv-water { animation: prWaterShimmer 2.4s ease-in-out infinite; }
-#pr-reveal .pr-rv-spray { animation: prSprayTwinkle 1.6s ease-in-out infinite; }
-#pr-reveal .pr-rv-spray:nth-of-type(2) { animation-delay: .3s; }
-#pr-reveal .pr-rv-spray:nth-of-type(3) { animation-delay: .6s; }
-@keyframes prWaterShimmer { 0%, 100% { opacity: .85; } 50% { opacity: .55; } }
-@keyframes prSprayTwinkle { 0%, 100% { opacity: .35; } 50% { opacity: .95; } }
 #pr-reveal.pr-on .pr-rv-gate.left { animation: prGateLeft 1.15s .55s cubic-bezier(.3,.7,.2,1) forwards; }
 #pr-reveal.pr-on .pr-rv-gate.right { animation: prGateRight 1.15s .55s cubic-bezier(.3,.7,.2,1) forwards; }
 @keyframes prGateLeft { 0% { transform: rotateY(0deg); } 100% { transform: rotateY(-108deg); opacity: .001; } }
@@ -375,27 +330,25 @@ main div.justify-center.gap-3.py-1 > div.rounded-full { animation: prBob 4.5s ea
   100% { opacity: 0; transform: translate3d(28px, 112vh, 0) rotate(calc(var(--rz, 0deg) + 280deg)); }
 }
 
-.pr-rv-content { position: relative; z-index: 2; width: 100%; padding: 0 22px; text-align: center; margin-top: -4vh; }
-.pr-rv-invoke, .pr-rv-line, .pr-rv-place, .pr-rv-names { opacity: 0; }
-.pr-rv-invoke { font: 500 15px/1.4 'Noto Serif Devanagari', 'Cormorant Garamond', Georgia, serif; letter-spacing: 2px; color: #8B7355; margin-bottom: 18px; }
-#pr-reveal.pr-on .pr-rv-invoke { animation: prUp .9s cubic-bezier(.2,.7,.2,1) .55s forwards; }
+.pr-rv-content { position: relative; z-index: 2; width: 100%; padding: 0 22px; text-align: center; }
+.pr-rv-line, .pr-rv-place, .pr-rv-names { opacity: 0; }
 .pr-rv-names { font-family: 'Great Vibes', 'Noto Serif Devanagari', 'Snell Roundhand', 'Brush Script MT', cursive; font-weight: 400; margin: 0;
   font-size: clamp(40px, 12vw, 64px); line-height: 1.15; padding: .12em .1em .28em; white-space: nowrap; color: #F6DC8D;
   background: linear-gradient(100deg, #D4AF37 0%, #FFF3C4 30%, #F6DC8D 50%, #D4AF37 75%, #FFF3C4 100%); background-size: 250% 100%;
   -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; text-shadow: none; filter: drop-shadow(0 4px 22px rgba(212,175,55,.45)); }
-#pr-reveal.pr-on .pr-rv-names { animation: prNames 1.5s cubic-bezier(.2,.7,.2,1) .85s forwards, prShimmer 4s linear 2.2s infinite; }
-@keyframes prNames { from { opacity: 0; transform: scale(1.12) translateY(8px); letter-spacing: .12em; filter: blur(10px) drop-shadow(0 4px 22px rgba(212,175,55,.45)); }
-                     to   { opacity: 1; transform: none; letter-spacing: 0; filter: blur(0) drop-shadow(0 4px 22px rgba(212,175,55,.45)); } }
+#pr-reveal.pr-on .pr-rv-names { animation: prNames 1.5s cubic-bezier(.2,.7,.2,1) .55s forwards, prShimmer 4s linear 2.2s infinite; }
+@keyframes prNames { from { opacity: 0; transform: scale(1.12) translateY(8px); letter-spacing: .12em; filter: drop-shadow(0 4px 22px rgba(212,175,55,.45)); }
+                     to   { opacity: 1; transform: none; letter-spacing: 0; filter: drop-shadow(0 4px 22px rgba(212,175,55,.45)); } }
 .pr-rv-line { width: 0; height: 1px; margin: 14px auto 16px; background: linear-gradient(90deg, transparent, #D4AF37, transparent); position: relative; }
-.pr-rv-line::after { content: "✦"; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -52%); color: #B8952F; font-size: 13px; background: #FDF0D4; padding: 0 8px; }
-#pr-reveal.pr-on .pr-rv-line { animation: prLine 1s cubic-bezier(.2,.7,.2,1) 1.9s forwards; }
+.pr-rv-line::after { content: "✦"; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -52%); color: #D4AF37; font-size: 13px; background: #22291A; padding: 0 8px; }
+#pr-reveal.pr-on .pr-rv-line { animation: prLine 1s cubic-bezier(.2,.7,.2,1) 1.6s forwards; }
 @keyframes prLine { from { opacity: 0; width: 0; } to { opacity: 1; width: min(66vw, 280px); } }
-.pr-rv-place { margin-top: 8px; font: italic 400 16px/1.4 'Cormorant Garamond', 'Noto Serif Devanagari', Georgia, serif; color: #6B6355; letter-spacing: 1.5px; }
-#pr-reveal.pr-on .pr-rv-place { animation: prUp .9s cubic-bezier(.2,.7,.2,1) 2.15s forwards; }
+.pr-rv-place { margin-top: 8px; font: italic 400 16px/1.4 'Cormorant Garamond', 'Noto Serif Devanagari', Georgia, serif; color: #E8D5A0; letter-spacing: 1px; }
+#pr-reveal.pr-on .pr-rv-place { animation: prUp .9s cubic-bezier(.2,.7,.2,1) 1.85s forwards; }
 @keyframes prUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
 .pr-rv-skip { position: absolute; left: 0; right: 0; bottom: calc(26px + env(safe-area-inset-bottom, 0px)); text-align: center; z-index: 3;
-  font: 600 10px/1 'Inter', 'Noto Sans Devanagari', sans-serif; letter-spacing: 3px; text-transform: uppercase; color: rgba(139,117,30,.55); opacity: 0; }
-#pr-reveal.pr-on .pr-rv-skip { animation: prUp .8s ease 2.4s forwards; }
+  font: 600 10px/1 'Inter', 'Noto Sans Devanagari', sans-serif; letter-spacing: 3px; text-transform: uppercase; color: rgba(232,213,160,.6); opacity: 0; }
+#pr-reveal.pr-on .pr-rv-skip { animation: prUp .8s ease 2.2s forwards; }
 
 /* shockwave ring that rolls over the page when the reveal dissolves */
 #pr-wave { position: fixed; left: 50%; top: 40%; width: 20px; height: 20px; margin: -10px 0 0 -10px; border-radius: 50%; z-index: 99997; pointer-events: none;
@@ -411,10 +364,8 @@ main div.justify-center.gap-3.py-1 > div.rounded-full { animation: prBob 4.5s ea
 @media (prefers-reduced-motion: reduce) {
   .pr-cover > .pr-cover-glow, .pr-seal-ring, .pr-seal-glow, .pr-seal-glow::before, .pr-dust i, .pr-mandala-spin { animation: none !important; }
   #pr-reveal.pr-on { animation: none; clip-path: none; }
-  .pr-rv-invoke, .pr-rv-line, .pr-rv-place, .pr-rv-names, .pr-rv-skip { opacity: 1 !important; animation: none !important; }
+  .pr-rv-line, .pr-rv-place, .pr-rv-names, .pr-rv-skip { opacity: 1 !important; animation: none !important; }
   .pr-rv-line { width: 200px; }
-  .pr-rv-garden, .pr-rv-lamp, .pr-rv-water, .pr-rv-spray, .pr-rv-finial { opacity: 1 !important; animation: none !important; transition: none !important; }
-  .pr-rv-gate-shine { display: none !important; }
   .pr-rv-gate.left, .pr-rv-gate.right { animation: none !important; opacity: 0 !important; }
   .pr-rv-petal { display: none !important; }
 }

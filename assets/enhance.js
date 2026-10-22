@@ -300,100 +300,6 @@
   }
   var CORNER = '<svg viewBox="0 0 26 26" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M2 24V9Q2 2 9 2H24"/><path d="M7 24V13Q7 7 13 7H24" opacity=".55"/><circle cx="2" cy="2" r="1.6" fill="currentColor" stroke="none"/></svg>';
 
-  /* a stylized courtyard: stone arch + pillars, a two-tier fountain, rose bushes, topiary —
-     all vector with real gradient shading for depth, nothing hotlinked */
-  var GARDEN_DEFS =
-    '<defs>' +
-    '<radialGradient id="prgTopiary" cx="32%" cy="26%" r="78%"><stop offset="0%" stop-color="#8CA178"/><stop offset="48%" stop-color="#52623F"/><stop offset="100%" stop-color="#232B18"/></radialGradient>' +
-    '<linearGradient id="prgPot" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#454A2E"/><stop offset="100%" stop-color="#171D0E"/></linearGradient>' +
-    '<linearGradient id="prgTrunk" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#6B7A54"/><stop offset="100%" stop-color="#333F22"/></linearGradient>' +
-    '<linearGradient id="prgStone" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#F7ECD2"/><stop offset="55%" stop-color="#E4CDA0"/><stop offset="100%" stop-color="#BE9D6C"/></linearGradient>' +
-    '<radialGradient id="prgRim" cx="38%" cy="28%" r="75%"><stop offset="0%" stop-color="#FFF0C2"/><stop offset="55%" stop-color="#E3B64E"/><stop offset="100%" stop-color="#A9792A"/></radialGradient>' +
-    '<radialGradient id="prgWater" cx="42%" cy="32%" r="70%"><stop offset="0%" stop-color="#F3FBF6"/><stop offset="55%" stop-color="#CDE8DC"/><stop offset="100%" stop-color="#93C3AE"/></radialGradient>' +
-    '<radialGradient id="prgRoseA" cx="32%" cy="26%" r="78%"><stop offset="0%" stop-color="#FFE3E6"/><stop offset="55%" stop-color="#E0738A"/><stop offset="100%" stop-color="#9B3A52"/></radialGradient>' +
-    '<radialGradient id="prgRoseB" cx="32%" cy="26%" r="78%"><stop offset="0%" stop-color="#FCEFC9"/><stop offset="55%" stop-color="#D9AE4E"/><stop offset="100%" stop-color="#A3762A"/></radialGradient>' +
-    '<linearGradient id="prgPillar" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#F3E1AE"/><stop offset="45%" stop-color="#C9A24A"/><stop offset="100%" stop-color="#8E6A24"/></linearGradient>' +
-    '<radialGradient id="prgArchGlow" cx="50%" cy="38%" r="62%"><stop offset="0%" stop-color="rgba(255,233,170,.65)"/><stop offset="100%" stop-color="rgba(255,233,170,0)"/></radialGradient>' +
-    '</defs>';
-  function gardenSVG() {
-    function rose(cx, cy, flip) {
-      var sx = flip ? -1 : 1;
-      var g = '<g transform="translate(' + cx + ',' + cy + ') scale(' + sx + ',1)">';
-      g += '<ellipse cx="0" cy="12" rx="30" ry="11" fill="rgba(35,43,24,.4)"/>';
-      g += '<path d="M-24 8 Q-15 -10 -2 2" stroke="#52623F" stroke-width="2.4" fill="none" opacity=".85"/>';
-      g += '<path d="M24 8 Q15 -10 2 2" stroke="#52623F" stroke-width="2.4" fill="none" opacity=".85"/>';
-      g += '<path d="M-14 9 Q-14 -2 -6 4" stroke="#3f4f38" stroke-width="2" fill="none" opacity=".7"/>';
-      var fills = ['prgRoseA', 'prgRoseB', 'prgRoseA', 'prgRoseB', 'prgRoseA', 'prgRoseA'];
-      var pts = [[-16, -1], [-6, -11], [7, -10], [16, 0], [0, -5], [-9, 5]];
-      var sizes = [6.6, 5.8, 6.2, 6, 7, 5.4];
-      for (var i = 0; i < pts.length; i++) {
-        g += '<circle cx="' + pts[i][0] + '" cy="' + pts[i][1] + '" r="' + sizes[i] + '" fill="url(#' + fills[i] + ')"/>';
-        g += '<circle cx="' + (pts[i][0] - sizes[i] * .28) + '" cy="' + (pts[i][1] - sizes[i] * .32) + '" r="' + (sizes[i] * .3) + '" fill="#fff6e8" opacity=".55"/>';
-      }
-      return g + '</g>';
-    }
-    function topiary(cx, cy, s) {
-      var g = '<g transform="translate(' + cx + ',' + cy + ') scale(' + s + ')">';
-      g += '<ellipse cx="0" cy="42" rx="15" ry="4" fill="rgba(23,29,14,.35)"/>';
-      g += '<path d="M-9 40 L9 40 L7 26 L-7 26 Z" fill="url(#prgPot)"/>';
-      g += '<rect x="-6" y="27" width="12" height="2.4" fill="#5a6a42" opacity=".8"/>';
-      g += '<rect x="-1.7" y="4" width="3.4" height="24" fill="url(#prgTrunk)"/>';
-      g += '<circle cx="0" cy="-6" r="19.5" fill="url(#prgTopiary)"/><circle cx="0" cy="-24.5" r="13.5" fill="url(#prgTopiary)"/><circle cx="0" cy="-39" r="9" fill="url(#prgTopiary)"/>';
-      g += '<ellipse cx="-6" cy="-12" rx="7" ry="5" fill="#A8BB90" opacity=".4"/><ellipse cx="-4" cy="-29" rx="5" ry="3.5" fill="#A8BB90" opacity=".4"/>';
-      for (var i = 0; i < 6; i++) {
-        var a = (Math.PI * 2 * i) / 6;
-        g += '<circle cx="' + (Math.cos(a) * 13).toFixed(1) + '" cy="' + (-6 + Math.sin(a) * 13).toFixed(1) + '" r="1.3" fill="#F3E1AE"/>';
-      }
-      return g + '</g>';
-    }
-    function pillar(x, flip) {
-      var sx = flip ? -1 : 1;
-      return '<g transform="translate(' + x + ',150) scale(' + sx + ',1)">' +
-        '<rect x="-6" y="-60" width="12" height="150" fill="url(#prgPillar)" opacity=".85"/>' +
-        '<rect x="-6" y="-60" width="3" height="150" fill="#FFF3C8" opacity=".5"/>' +
-        '<path d="M-10 -60 L10 -60 L10 -69 Q0 -78 -10 -69 Z" fill="url(#prgPillar)" opacity=".9"/>' +
-        '<ellipse cx="0" cy="90" rx="13" ry="3.5" fill="rgba(139,106,36,.35)"/></g>';
-    }
-    var fountain = '<g transform="translate(150,188)">' +
-      '<ellipse cx="0" cy="190" rx="0" ry="0"/>' +  // noop anchor (keeps numbering stable)
-      '<ellipse cx="0" cy="118" rx="92" ry="20" fill="url(#prgArchGlow)"/>' +
-      '<ellipse cx="0" cy="48" rx="56" ry="10" fill="rgba(139,106,36,.22)"/>' +
-      '<path d="M-40 34 L40 34 L34 12 L-34 12 Z" fill="url(#prgStone)"/>' +
-      '<path d="M-34 13 L34 13 L31 8 L-31 8 Z" fill="#fff" opacity=".25"/>' +
-      '<ellipse cx="0" cy="12" rx="34" ry="9" fill="url(#prgRim)"/>' +
-      '<ellipse class="pr-rv-water" cx="0" cy="11" rx="27" ry="6.5" fill="url(#prgWater)"/>' +
-      '<ellipse cx="-8" cy="9" rx="8" ry="2.2" fill="#fff" opacity=".5"/>' +
-      '<rect x="-3.4" y="-28" width="6.8" height="40" fill="url(#prgStone)"/>' +
-      '<ellipse cx="0" cy="-28" rx="16" ry="6" fill="url(#prgRim)"/>' +
-      '<ellipse class="pr-rv-water" cx="0" cy="-29" rx="12" ry="4" fill="url(#prgWater)"/>' +
-      '<circle cx="0" cy="-34" r="2.6" fill="url(#prgRim)"/>' +
-      '<path d="M0 -36 C-11 -47 -5 -55 0 -61" stroke="#BFE3D5" stroke-width="1.8" fill="none" opacity=".8"/>' +
-      '<path d="M0 -36 C11 -47 5 -55 0 -61" stroke="#BFE3D5" stroke-width="1.8" fill="none" opacity=".8"/>' +
-      '<circle class="pr-rv-spray" cx="-6" cy="-59" r="1.7" fill="#fff" opacity=".85"/>' +
-      '<circle class="pr-rv-spray" cx="6" cy="-58" r="1.5" fill="#fff" opacity=".75"/>' +
-      '<circle class="pr-rv-spray" cx="0" cy="-64" r="1.7" fill="#fff" opacity=".9"/></g>';
-    // a small, simple trishul-and-crescent emblem (Shiva) with a blossom accent (Parvati) —
-    // a quiet nod to the Mahadev temple the venue is named for, not a literal figure
-    var finial = '<g class="pr-rv-finial" transform="translate(150,34)">' +
-      '<path d="M0 -3 L0 15" stroke="#B8952F" stroke-width="2" stroke-linecap="round"/>' +
-      '<path d="M0 -3 Q-7 -7 -9 -16" stroke="#B8952F" stroke-width="2" fill="none" stroke-linecap="round"/>' +
-      '<path d="M0 -3 Q7 -7 9 -16" stroke="#B8952F" stroke-width="2" fill="none" stroke-linecap="round"/>' +
-      '<path d="M0 -3 L0 -18" stroke="#B8952F" stroke-width="2" stroke-linecap="round"/>' +
-      '<path d="M-15 -11 A6.5 6.5 0 1 0 -15 -24 A8.5 8.5 0 1 1 -15 -11 Z" fill="#D4AF37" opacity=".85"/>' +
-      '<circle cx="0" cy="18" r="3.2" fill="#E0738A"/><circle cx="-4" cy="20" r="2.4" fill="#E0738A" opacity=".85"/><circle cx="4" cy="20" r="2.4" fill="#E0738A" opacity=".85"/>' +
-      '</g>';
-    var out = '<svg viewBox="0 0 300 300" aria-hidden="true">' + GARDEN_DEFS;
-    out += '<ellipse cx="150" cy="130" rx="130" ry="110" fill="url(#prgArchGlow)" opacity=".5"/>';
-    out += '<path d="M40 280 Q40 40 150 40 Q260 40 260 280" fill="none" stroke="url(#prgPillar)" stroke-width="3" opacity=".75"/>';
-    out += '<path d="M40 280 Q40 40 150 40 Q260 40 260 280" fill="none" stroke="#FFF3C8" stroke-width="1" opacity=".5"/>';
-    out += finial;
-    out += pillar(44, false) + pillar(256, true);
-    out += rose(78, 205, false) + rose(222, 205, true);
-    out += topiary(36, 240, .85) + topiary(264, 240, .85);
-    out += fountain;
-    return out + '</svg>';
-  }
-
   var coverEl = null, sealBtn = null;
   function setupCover() {
     sealBtn = document.querySelector('button[aria-label^="Open invitation"]');
@@ -455,12 +361,12 @@
           (Math.random() * 1.3).toFixed(2) + 's;--rz:' + (Math.random() * 40 - 20).toFixed(0) + 'deg"></i>';
       }
     }
-    rv.innerHTML = '<div class="pr-rv-halo"></div><div class="pr-rv-mandala pr-rv-garden">' + gardenSVG() + '</div>' +
-      '<div class="pr-rv-gate-scene"><i class="pr-rv-lamp left"></i><i class="pr-rv-lamp right"></i>' +
-      '<div class="pr-rv-gate left"><i class="pr-rv-fringe"></i><i class="pr-rv-gate-shine"></i></div>' +
-      '<div class="pr-rv-gate right"><i class="pr-rv-fringe"></i><i class="pr-rv-gate-shine"></i></div></div>' +
+    rv.innerHTML = '<div class="pr-rv-halo"></div><div class="pr-rv-mandala">' + mandalaSVG(.5) + '</div>' +
+      '<div class="pr-rv-gate-scene">' +
+      '<div class="pr-rv-gate left"><i class="pr-rv-fringe"></i></div>' +
+      '<div class="pr-rv-gate right"><i class="pr-rv-fringe"></i></div></div>' +
       '<div class="pr-rv-petals">' + petals + '</div>' +
-      '<div class="pr-rv-content"><div class="pr-rv-invoke"></div><h2 class="pr-rv-names"></h2><div class="pr-rv-line"></div>' +
+      '<div class="pr-rv-content"><h2 class="pr-rv-names"></h2><div class="pr-rv-line"></div>' +
       '<div class="pr-rv-place"></div></div><div class="pr-rv-skip"></div>';
     document.body.appendChild(rv);
     wave = document.createElement('div'); wave.id = 'pr-wave'; wave.setAttribute('aria-hidden', 'true');
@@ -470,9 +376,8 @@
 
   function fillReveal() {
     var hi = isHindi();
-    rv.querySelector('.pr-rv-invoke').textContent = hi ? '॥ श्री गणेशाय नमः ॥' : '॥ Shree Ganeshaya Namah ॥';
     rv.querySelector('.pr-rv-names').textContent = hi ? 'पीयूष & रिया' : 'Peeyush & Ria';
-    rv.querySelector('.pr-rv-place').textContent = hi ? 'जयपुर, राजस्थान' : 'Jaipur, Rajasthan';
+    rv.querySelector('.pr-rv-place').textContent = hi ? 'हमारे विवाह के निमंत्रण में आपका स्वागत है' : 'Welcome to our wedding invitation';
     rv.querySelector('.pr-rv-skip').textContent = hi ? 'आगे बढ़ने के लिए टैप करें' : 'Tap to continue';
   }
 
