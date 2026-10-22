@@ -278,10 +278,10 @@ main div.justify-center.gap-3.py-1 > div.rounded-full { animation: prBob 4.5s ea
 #pr-reveal.pr-out { animation: prOut .8s cubic-bezier(.4,0,.2,1) forwards; clip-path: circle(150% at 50% 50%); }
 @keyframes prOut { 0% { opacity: 1; transform: scale(1); } 100% { opacity: 0; transform: scale(1.1); } }
 
-#pr-reveal .pr-rv-mandala { position: absolute; left: 50%; top: 42%; width: min(150vw, 760px); transform: translate(-50%, -50%); opacity: .5; }
+#pr-reveal .pr-rv-mandala { position: absolute; left: 50%; top: 50%; width: min(130vw, 600px); transform: translate(-50%, -50%); opacity: .5; }
 #pr-reveal .pr-rv-mandala svg { width: 100%; height: auto; display: block; }
 #pr-reveal .pr-rv-mandala .pr-mandala-spin { animation-duration: 60s; }
-#pr-reveal .pr-rv-halo { position: absolute; left: 50%; top: 42%; width: 130vw; max-width: 640px; aspect-ratio: 1; transform: translate(-50%, -50%);
+#pr-reveal .pr-rv-halo { position: absolute; left: 50%; top: 50%; width: 120vw; max-width: 560px; aspect-ratio: 1; transform: translate(-50%, -50%);
   background: radial-gradient(circle, rgba(255,214,121,.3), rgba(212,175,55,.06) 42%, transparent 66%); animation: prBreathe 4s ease-in-out infinite; }
 #pr-reveal:before { content: ""; position: absolute; inset: 14px; border: 1px solid rgba(226,190,92,.45); outline: 1px solid rgba(226,190,92,.15); outline-offset: 6px; pointer-events: none; }
 
