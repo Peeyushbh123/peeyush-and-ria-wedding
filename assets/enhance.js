@@ -712,11 +712,9 @@
     sangeet: {
       accent: 'linear-gradient(90deg, #D4AF37, #6B3F69, #3E2A52)',
       accentV: 'linear-gradient(180deg, #D4AF37, #6B3F69, #3E2A52)',
-      border: 'rgba(212,175,55,.45)',
+      border: 'rgba(107,63,105,.35)',
       bg: 'linear-gradient(180deg, #FDF6FB 0%, #F7ECF5 100%)',
-      photo: 'assets/images/sangeet-theme.jpg',
-      photoOverlay: 'linear-gradient(180deg, rgba(18,10,22,.38) 0%, rgba(16,9,20,.66) 55%, rgba(10,6,12,.88) 100%)',
-      label: '#F0D9A8', title: '#FFF6E8', text: 'rgba(255,245,232,.92)', value: '#FFF6E8', themeVal: '#F0CB63',
+      frame: 'assets/images/sangeet-theme.jpg',
       badgeBg: 'linear-gradient(145deg, #2E1F35, #4A2F52)', badgeBorder: '#D4AF37', icon: '#E8D5A0',
       svg: evIcon('<circle cx="12" cy="12" r="6.4"/><path d="M5.6 12h12.8M12 5.6v12.8M7.7 7.7l8.6 8.6M16.3 7.7l-8.6 8.6" stroke-width=".8" opacity=".55"/>' +
         '<path d="M12 2.2v2M21.8 12h-2M12 21.8v-2M2.2 12h2" stroke-width="1.3"/>')
@@ -758,21 +756,14 @@
       var art = findEventArticle(ev);
       if (!theme || !art) return;
       art.classList.add('pr-ev-' + ev.id);
-      if (theme.photo) {
-        art.style.backgroundImage = theme.photoOverlay + ', url(' + theme.photo + ')';
-        art.style.backgroundSize = 'cover';
-        art.style.backgroundPosition = 'center 32%';
-        art.style.backgroundRepeat = 'no-repeat';
-      } else {
-        art.style.background = theme.bg;
-      }
+      art.style.background = theme.bg;
       art.style.borderColor = theme.border;
       var topBar = art.querySelector('div[class*="h-[4px]"]');
       if (topBar) topBar.style.background = theme.accent;
       var leftBar = art.querySelector('div[class*="w-[4px]"]');
       if (leftBar) leftBar.style.background = theme.accentV;
       var bigGlyph = art.querySelector('div[class*="rotate-12"]');
-      if (bigGlyph) { if (theme.photo) bigGlyph.style.display = 'none'; else bigGlyph.style.color = theme.icon; }
+      if (bigGlyph) bigGlyph.style.color = theme.icon;
       var badge = art.querySelector('div[class*="w-10"][class*="h-10"][class*="rounded-full"]');
       if (badge) {
         badge.style.background = theme.badgeBg;
@@ -780,14 +771,16 @@
         badge.style.color = theme.icon;
         badge.innerHTML = theme.svg;
       }
-      if (theme.photo) {
-        art.style.setProperty('--label', theme.label);
-        var lightEls = art.querySelectorAll('[class*="text-[#3E4A33]"]');
-        for (var i = 0; i < lightEls.length; i++) lightEls[i].style.color = theme.value;
-        var descEl = art.querySelector('p[class*="text-[#6B6355]"]');
-        if (descEl) descEl.style.color = theme.text;
-        var themeValEl = art.querySelector('p[class*="text-[#B8952F]"]');
-        if (themeValEl) themeValEl.style.color = theme.themeVal;
+      if (theme.frame && !art.querySelector('.pr-ev-frame-banner')) {
+        var topRow = art.querySelector('div[class*="justify-between"]');
+        if (topRow && topRow.parentNode) {
+          var banner = document.createElement('div');
+          banner.className = 'pr-ev-frame-banner';
+          var bimg = document.createElement('img');
+          bimg.src = theme.frame; bimg.alt = ''; bimg.loading = 'lazy';
+          banner.appendChild(bimg);
+          topRow.parentNode.insertBefore(banner, topRow);
+        }
       }
     });
     document.body.classList.add('pr-ev-themed');
