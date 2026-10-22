@@ -704,7 +704,7 @@
       accentV: 'linear-gradient(180deg, #D4AF37, #B8952F, #8B3A3A)',
       border: 'rgba(139,58,58,.35)',
       bg: 'linear-gradient(180deg, #FFFBF5 0%, #FDF3EC 100%)',
-      photo: 'assets/images/tilak-theme.jpg',
+      photo: 'assets/images/tilak-theme.jpg', swatch: '#FDF3EC',
       photoOverlay: 'linear-gradient(180deg, rgba(255,251,240,.3) 0%, rgba(255,251,240,.22) 50%, rgba(255,251,240,.34) 100%)',
       badgeBg: 'linear-gradient(145deg, #FBEFE2, #F7E3CF)', badgeBorder: '#C98A4B', icon: '#8B3A3A',
       svg: evIcon('<ellipse cx="12" cy="15.2" rx="7.4" ry="2.1"/><path d="M4.6 15.2Q12 19.4 19.4 15.2"/>' +
@@ -716,7 +716,7 @@
       accentV: 'linear-gradient(180deg, #D4AF37, #6B3F69, #3E2A52)',
       border: 'rgba(212,175,55,.4)',
       bg: 'linear-gradient(180deg, #FDF6FB 0%, #F7ECF5 100%)',
-      photo: 'assets/images/sangeet-theme.jpg',
+      photo: 'assets/images/sangeet-theme.jpg', swatch: '#120B16',
       photoOverlay: 'linear-gradient(180deg, rgba(12,8,14,.4) 0%, rgba(10,7,12,.46) 50%, rgba(10,7,12,.58) 100%)',
       lightText: true, label: '#F0D9A8', value: '#FFF6E8', text: 'rgba(255,245,232,.92)', themeVal: '#F0CB63',
       badgeBg: 'linear-gradient(145deg, #2E1F35, #4A2F52)', badgeBorder: '#D4AF37', icon: '#E8D5A0',
@@ -728,7 +728,7 @@
       accentV: 'linear-gradient(180deg, #A7B6E0, #C9B8E8, #8FA3D6)',
       border: 'rgba(145,130,210,.35)',
       bg: 'linear-gradient(180deg, #F8F7FF 0%, #F1EEFC 100%)',
-      photo: 'assets/images/haldi-theme.jpg',
+      photo: 'assets/images/haldi-theme.jpg', swatch: '#F1EEFC',
       photoOverlay: 'linear-gradient(180deg, rgba(248,247,255,.3) 0%, rgba(248,247,255,.22) 50%, rgba(248,247,255,.34) 100%)',
       badgeBg: 'linear-gradient(145deg, #ECE9FB, #E3DEF7)', badgeBorder: '#B9A8E6', icon: '#D4A017',
       svg: evIcon('<path d="M8.4 10.2h7.2l-1.1 7a1 1 0 0 1-1 .84h-3a1 1 0 0 1-1-.84l-1.1-7Z"/>' +
@@ -740,7 +740,7 @@
       accentV: 'linear-gradient(180deg, #7C9A6B, #A9C08E, #577049)',
       border: 'rgba(90,120,70,.35)',
       bg: 'linear-gradient(180deg, #F8FBF3 0%, #EFF6E6 100%)',
-      photo: 'assets/images/mehendi-theme.jpg',
+      photo: 'assets/images/mehendi-theme.jpg', swatch: '#EFF6E6',
       photoOverlay: 'linear-gradient(180deg, rgba(248,251,243,.3) 0%, rgba(248,251,243,.22) 50%, rgba(248,251,243,.34) 100%)',
       badgeBg: 'linear-gradient(145deg, #E9F2DF, #DCEBD0)', badgeBorder: '#8FAE78', icon: '#6B4A2A',
       svg: evIcon('<path d="M9.2 5.6 15 8.4 12 18.4 9 8.4Z"/>' +
@@ -752,7 +752,7 @@
       accentV: 'linear-gradient(180deg, #D4AF37, #8B3A3A, #B8952F)',
       border: 'rgba(139,58,58,.4)',
       bg: 'linear-gradient(180deg, #FFFDF7 0%, #FBF0E0 100%)',
-      photo: 'assets/images/wedding-theme.jpg',
+      photo: 'assets/images/wedding-theme.jpg', swatch: '#FBF0E0',
       photoOverlay: 'linear-gradient(180deg, rgba(255,253,247,.3) 0%, rgba(255,253,247,.22) 50%, rgba(255,253,247,.34) 100%)',
       badgeBg: 'linear-gradient(145deg, #3E2A1A, #1F150D)', badgeBorder: '#D4AF37', icon: '#E8D5A0',
       svg: evIcon('<path d="M5.6 18.6V9.4a6.4 6.4 0 0 1 12.8 0v9.2"/><path d="M5 18.6h14"/>' +
@@ -762,10 +762,11 @@
   function setupEventThemes(main) {
     if (document.body.classList.contains('pr-ev-themed')) return;
     function applyPhoto(art, theme) {
+      art.style.backgroundColor = theme.swatch;
       art.style.backgroundImage = theme.photoOverlay + ', url(' + theme.photo + ')';
-      art.style.backgroundSize = 'cover';
-      art.style.backgroundPosition = 'center';
-      art.style.backgroundRepeat = 'no-repeat';
+      art.style.backgroundSize = 'cover, contain';
+      art.style.backgroundPosition = 'center, center';
+      art.style.backgroundRepeat = 'no-repeat, no-repeat';
     }
     var io = ('IntersectionObserver' in window) ? new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
@@ -792,6 +793,8 @@
       if (leftBar) leftBar.style.background = theme.accentV;
       var bigGlyph = art.querySelector('div[class*="rotate-12"]');
       if (bigGlyph) { if (theme.photo) bigGlyph.style.display = 'none'; else bigGlyph.style.color = theme.icon; }
+      var glowBlur = art.querySelector('div[class*="blur-["]');
+      if (glowBlur && theme.photo) glowBlur.style.display = 'none';
       var badge = art.querySelector('div[class*="w-10"][class*="h-10"][class*="rounded-full"]');
       if (badge) {
         badge.style.background = theme.badgeBg;
