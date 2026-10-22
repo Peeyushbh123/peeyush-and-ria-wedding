@@ -668,6 +668,30 @@
   }
 
   /* =============================================================
+     COUPLE PHOTOS — portrait added above each card's existing content
+     ============================================================= */
+  function setupCouplePhotos(main) {
+    if (document.querySelector('.pr-couple-photo-wrap')) return;
+    var pics = [
+      { sel: '[data-en="The Groom"]', src: 'assets/images/groom-portrait.jpg', alt: 'Peeyush' },
+      { sel: '[data-en="The Bride"]', src: 'assets/images/bride-portrait.jpg', alt: 'Ria' }
+    ];
+    pics.forEach(function (p) {
+      var label = main.querySelector(p.sel);
+      if (!label || !label.parentNode) return;
+      var wrap = document.createElement('div');
+      wrap.className = 'pr-couple-photo-wrap';
+      var img = document.createElement('img');
+      img.className = 'pr-couple-photo';
+      img.src = p.src;
+      img.alt = p.alt;
+      img.loading = 'lazy';
+      wrap.appendChild(img);
+      label.parentNode.insertBefore(wrap, label);
+    });
+  }
+
+  /* =============================================================
      QUICK NAV — a small floating menu to jump straight to any section
      ============================================================= */
   var STR_NAV = {
@@ -915,6 +939,7 @@
         setupScratchSection(main);
         setupGuestTools(main);
         setupReveals(); setupTilt(); setupCountdown(); watchOpen(main);
+        setupCouplePhotos(main);
         setupNav(main);
         setupLanguage();
       } else if (tries > 80) { clearInterval(t); }
