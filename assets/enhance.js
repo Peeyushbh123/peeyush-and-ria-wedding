@@ -777,26 +777,15 @@
      ============================================================= */
   var STR_SCRATCH = {
     eyebrow: ['A little surprise', 'एक छोटी सी सौगात'],
-    prompt: ['Scratch to reveal', 'स्क्रैच करें'],
+    prompt: ['Scratch', 'स्क्रैच'],
     heading: ['Save the Date', 'यह तारीख सहेजें'],
     dates: ['16', '16'],
     month: ['February 2027', 'फरवरी 2027'],
     place: ['Jaipur, Rajasthan', 'जयपुर, राजस्थान'],
     tag: ['#PyaaRkaaSafar', '#PyaaRkaaSafar'],
-    hint: ['Swipe your finger across the heart', 'हृदय पर अपनी उंगली घुमाएँ']
+    hint: ['Swipe your finger across the card', 'कार्ड पर अपनी उंगली घुमाएँ']
   };
   function TS(key) { return STR_SCRATCH[key][isHindi() ? 1 : 0]; }
-
-  function heartPath(ctx, cx, cy, size) {
-    var top = size * 0.32;
-    ctx.beginPath();
-    ctx.moveTo(cx, cy + top);
-    ctx.bezierCurveTo(cx, cy, cx - size / 2, cy, cx - size / 2, cy + top);
-    ctx.bezierCurveTo(cx - size / 2, cy + (size + top) / 2, cx, cy + (size + top) / 2, cx, cy + size);
-    ctx.bezierCurveTo(cx, cy + (size + top) / 2, cx + size / 2, cy + (size + top) / 2, cx + size / 2, cy + top);
-    ctx.bezierCurveTo(cx + size / 2, cy, cx, cy, cx, cy + top);
-    ctx.closePath();
-  }
 
   function renderScratchContent(sec) {
     sec.innerHTML =
@@ -837,15 +826,10 @@
         ctx.arc(Math.random() * W, Math.random() * H, Math.random() * 1.3 + .3, 0, Math.PI * 2);
         ctx.fill();
       }
-      var heartCy = H * 0.54, heartSize = Math.min(W, H) * 0.56;
-      ctx.save();
-      heartPath(ctx, W / 2, heartCy - heartSize * 0.5, heartSize);
-      ctx.strokeStyle = 'rgba(232,213,160,.85)'; ctx.lineWidth = 2; ctx.stroke();
-      ctx.restore();
-      ctx.fillStyle = '#F3E9C8'; ctx.textAlign = 'center';
-      ctx.font = '600 11px Inter, sans-serif';
-      ctx.fillText(TS('prompt').toUpperCase(), W / 2, heartCy - heartSize * 0.5 - 6);
-      ctx.font = (heartSize * 0.3).toFixed(0) + 'px serif'; ctx.fillText('♡', W / 2, heartCy + heartSize * 0.12);
+      ctx.fillStyle = '#F3E9C8'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.font = '600 14px Inter, sans-serif';
+      ctx.fillText(TS('prompt').toUpperCase(), W / 2, H * 0.5);
+      ctx.textBaseline = 'alphabetic';
     }
 
     function applySize(w, h) {
