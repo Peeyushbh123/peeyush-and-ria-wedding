@@ -692,6 +692,89 @@
   }
 
   /* =============================================================
+     EVENT THEMES — each ceremony card gets a colour tint + custom icon
+     ============================================================= */
+  function evIcon(path) {
+    return '<svg class="pr-ev-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
+      'stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">' + path + '</svg>';
+  }
+  var EVENT_THEME = {
+    tilak: {
+      accent: 'linear-gradient(90deg, #D4AF37, #B8952F, #8B3A3A)',
+      accentV: 'linear-gradient(180deg, #D4AF37, #B8952F, #8B3A3A)',
+      border: 'rgba(139,58,58,.35)',
+      bg: 'linear-gradient(180deg, #FFFBF5 0%, #FDF3EC 100%)',
+      badgeBg: 'linear-gradient(145deg, #FBEFE2, #F7E3CF)', badgeBorder: '#C98A4B', icon: '#8B3A3A',
+      svg: evIcon('<ellipse cx="12" cy="15.2" rx="7.4" ry="2.1"/><path d="M4.6 15.2Q12 19.4 19.4 15.2"/>' +
+        '<rect x="10.5" y="10.6" width="3" height="1.5" rx=".6" fill="currentColor" stroke="none"/>' +
+        '<path d="M12 4.6c-1.3 1.5-1.3 3 0 4.1 1.3-1.1 1.3-2.6 0-4.1Z" fill="currentColor" stroke="none"/>')
+    },
+    sangeet: {
+      accent: 'linear-gradient(90deg, #D4AF37, #6B3F69, #3E2A52)',
+      accentV: 'linear-gradient(180deg, #D4AF37, #6B3F69, #3E2A52)',
+      border: 'rgba(107,63,105,.35)',
+      bg: 'linear-gradient(180deg, #FDF6FB 0%, #F7ECF5 100%)',
+      badgeBg: 'linear-gradient(145deg, #2E1F35, #4A2F52)', badgeBorder: '#D4AF37', icon: '#E8D5A0',
+      svg: evIcon('<circle cx="12" cy="12" r="6.4"/><path d="M5.6 12h12.8M12 5.6v12.8M7.7 7.7l8.6 8.6M16.3 7.7l-8.6 8.6" stroke-width=".8" opacity=".55"/>' +
+        '<path d="M12 2.2v2M21.8 12h-2M12 21.8v-2M2.2 12h2" stroke-width="1.3"/>')
+    },
+    haldi: {
+      accent: 'linear-gradient(90deg, #A7B6E0, #C9B8E8, #8FA3D6)',
+      accentV: 'linear-gradient(180deg, #A7B6E0, #C9B8E8, #8FA3D6)',
+      border: 'rgba(145,130,210,.35)',
+      bg: 'linear-gradient(180deg, #F8F7FF 0%, #F1EEFC 100%)',
+      badgeBg: 'linear-gradient(145deg, #ECE9FB, #E3DEF7)', badgeBorder: '#B9A8E6', icon: '#D4A017',
+      svg: evIcon('<path d="M8.4 10.2h7.2l-1.1 7a1 1 0 0 1-1 .84h-3a1 1 0 0 1-1-.84l-1.1-7Z"/>' +
+        '<path d="M9.5 10.2V8a2.5 2.5 0 0 1 5 0v2.2"/><path d="M7 10.2h10"/>' +
+        '<path d="M9.8 6.6 8.7 5.3M14.2 6.6l1.1-1.3" stroke-width="1.1"/>')
+    },
+    mehendi: {
+      accent: 'linear-gradient(90deg, #7C9A6B, #A9C08E, #577049)',
+      accentV: 'linear-gradient(180deg, #7C9A6B, #A9C08E, #577049)',
+      border: 'rgba(90,120,70,.35)',
+      bg: 'linear-gradient(180deg, #F8FBF3 0%, #EFF6E6 100%)',
+      badgeBg: 'linear-gradient(145deg, #E9F2DF, #DCEBD0)', badgeBorder: '#8FAE78', icon: '#6B4A2A',
+      svg: evIcon('<path d="M9.2 5.6 15 8.4 12 18.4 9 8.4Z"/>' +
+        '<path d="M12 13.4c1.5 1.3 1.5 3.1 0 4.4-1.5-1.3-1.5-3.1 0-4.4Z" fill="currentColor" stroke="none" opacity=".85"/>' +
+        '<path d="M9.6 9.4c1.8.5 1.8 2.1 0 2.6" stroke-width="1"/>')
+    },
+    wedding: {
+      accent: 'linear-gradient(90deg, #D4AF37, #8B3A3A, #B8952F)',
+      accentV: 'linear-gradient(180deg, #D4AF37, #8B3A3A, #B8952F)',
+      border: 'rgba(139,58,58,.4)',
+      bg: 'linear-gradient(180deg, #FFFDF7 0%, #FBF0E0 100%)',
+      badgeBg: 'linear-gradient(145deg, #3E2A1A, #1F150D)', badgeBorder: '#D4AF37', icon: '#E8D5A0',
+      svg: evIcon('<path d="M5.6 18.6V9.4a6.4 6.4 0 0 1 12.8 0v9.2"/><path d="M5 18.6h14"/>' +
+        '<path d="M12 2.6v1.8M12 4.4l1.6.9" />')
+    }
+  };
+  function setupEventThemes(main) {
+    if (document.body.classList.contains('pr-ev-themed')) return;
+    EVENTS.forEach(function (ev) {
+      var theme = EVENT_THEME[ev.id];
+      var art = findEventArticle(ev);
+      if (!theme || !art) return;
+      art.classList.add('pr-ev-' + ev.id);
+      art.style.background = theme.bg;
+      art.style.borderColor = theme.border;
+      var topBar = art.querySelector('div[class*="h-[4px]"]');
+      if (topBar) topBar.style.background = theme.accent;
+      var leftBar = art.querySelector('div[class*="w-[4px]"]');
+      if (leftBar) leftBar.style.background = theme.accentV;
+      var bigGlyph = art.querySelector('div[class*="rotate-12"]');
+      if (bigGlyph) bigGlyph.style.color = theme.icon;
+      var badge = art.querySelector('div[class*="w-10"][class*="h-10"][class*="rounded-full"]');
+      if (badge) {
+        badge.style.background = theme.badgeBg;
+        badge.style.borderColor = theme.badgeBorder;
+        badge.style.color = theme.icon;
+        badge.innerHTML = theme.svg;
+      }
+    });
+    document.body.classList.add('pr-ev-themed');
+  }
+
+  /* =============================================================
      QUICK NAV — a small floating menu to jump straight to any section
      ============================================================= */
   var STR_NAV = {
@@ -940,6 +1023,7 @@
         setupGuestTools(main);
         setupReveals(); setupTilt(); setupCountdown(); watchOpen(main);
         setupCouplePhotos(main);
+        setupEventThemes(main);
         setupNav(main);
         setupLanguage();
       } else if (tries > 80) { clearInterval(t); }
