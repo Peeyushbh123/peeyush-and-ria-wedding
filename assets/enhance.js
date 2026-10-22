@@ -667,6 +667,95 @@
     sec.appendChild(row2);
   }
 
+  /* =============================================================
+     QUICK NAV — a small floating menu to jump straight to any section
+     ============================================================= */
+  var STR_NAV = {
+    label: ['Jump to', 'यहाँ जाएं'],
+    hero: ['Welcome', 'स्वागत'],
+    couple: ['The Couple', 'वर-वधू'],
+    venue: ['Venue', 'स्थल'],
+    rsvp: ['Save the Date & RSVP', 'तारीख व RSVP']
+  };
+  function navLabel(key) { return STR_NAV[key][isHindi() ? 1 : 0]; }
+
+  function findEventArticle(ev) {
+    var heads = $$('main article h3');
+    for (var i = 0; i < heads.length; i++) {
+      var t = heads[i].textContent.trim();
+      if (t === ev.en || t === ev.hi) return heads[i].closest('article');
+    }
+    return null;
+  }
+  function findVenueSection() {
+    var heads = $$('main h3');
+    for (var i = 0; i < heads.length; i++) {
+      var t = heads[i].textContent.trim();
+      if (t === 'Jharkhand Palace And Resort' || t === 'झारखंड पैलेस एंड रिसॉर्ट') {
+        return heads[i].closest('section') || heads[i].parentElement;
+      }
+    }
+    return null;
+  }
+
+  function setupNav(main) {
+    if (document.getElementById('pr-nav')) return;
+    var targets = [];
+    var hero = main.querySelector('section');
+    if (hero) targets.push({ labelFn: function () { return navLabel('hero'); }, el: hero });
+    var couple = main.querySelector('.grid.gap-3.mb-7');
+    if (couple) targets.push({ labelFn: function () { return navLabel('couple'); }, el: couple });
+    EVENTS.forEach(function (ev) {
+      var el = findEventArticle(ev);
+      if (el) targets.push({ labelFn: function () { return isHindi() ? ev.hi : ev.en; }, el: el });
+    });
+    var venueEl = findVenueSection();
+    if (venueEl) targets.push({ labelFn: function () { return navLabel('venue'); }, el: venueEl });
+    var guestTools = document.getElementById('pr-guest-tools');
+    if (guestTools) targets.push({ labelFn: function () { return navLabel('rsvp'); }, el: guestTools });
+    if (targets.length < 2) return;
+
+    var nav = document.createElement('div');
+    nav.id = 'pr-nav';
+    var fab = document.createElement('button');
+    fab.id = 'pr-nav-fab'; fab.type = 'button'; fab.setAttribute('aria-expanded', 'false');
+    fab.innerHTML = '<span></span><span></span><span></span>';
+    var menu = document.createElement('div');
+    menu.id = 'pr-nav-menu'; menu.setAttribute('role', 'menu');
+    var list = document.createElement('div'); list.className = 'pr-nav-list';
+    menu.appendChild(list); nav.appendChild(menu); nav.appendChild(fab);
+    document.body.appendChild(nav);
+
+    var open = false;
+    function closeMenu() { open = false; nav.classList.remove('pr-nav-open'); fab.setAttribute('aria-expanded', 'false'); }
+    function openMenu() { open = true; nav.classList.add('pr-nav-open'); fab.setAttribute('aria-expanded', 'true'); }
+
+    function renderList() {
+      list.innerHTML = '';
+      fab.setAttribute('aria-label', navLabel('label'));
+      targets.forEach(function (t) {
+        var btn = mk('button', 'pr-nav-item', t.labelFn(), { type: 'button' });
+        btn.addEventListener('click', function () {
+          closeMenu();
+          setTimeout(function () { t.el.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' }); }, reduced ? 0 : 180);
+        });
+        list.appendChild(btn);
+      });
+    }
+    renderList();
+    onLangChange.push(renderList);
+
+    fab.addEventListener('click', function () { if (open) closeMenu(); else openMenu(); });
+    document.addEventListener('click', function (e) { if (open && !nav.contains(e.target)) closeMenu(); }, true);
+
+    // only show the nav once the invitation has actually opened
+    var tries2 = 0;
+    var revealTimer = setInterval(function () {
+      if (opened) { nav.classList.add('pr-nav-ready'); clearInterval(revealTimer); }
+      else if (++tries2 > 200) clearInterval(revealTimer);
+    }, 150);
+  }
+
   function setupGuestTools(main) {
     if (document.getElementById('pr-guest-tools')) return;
     var sec = document.createElement('div');   // a div (not section) so the built-in section effects don't double up
@@ -826,6 +915,7 @@
         setupScratchSection(main);
         setupGuestTools(main);
         setupReveals(); setupTilt(); setupCountdown(); watchOpen(main);
+        setupNav(main);
         setupLanguage();
       } else if (tries > 80) { clearInterval(t); }
     }, 150);
