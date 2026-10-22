@@ -705,7 +705,7 @@
       border: 'rgba(139,58,58,.35)',
       bg: 'linear-gradient(180deg, #FFFBF5 0%, #FDF3EC 100%)',
       photo: 'assets/images/tilak-theme.jpg',
-      photoOverlay: 'linear-gradient(180deg, rgba(255,251,240,.78) 0%, rgba(255,251,240,.4) 35%, rgba(255,251,240,.42) 65%, rgba(255,251,240,.8) 100%)',
+      photoOverlay: 'linear-gradient(180deg, rgba(255,251,240,.3) 0%, rgba(255,251,240,.22) 50%, rgba(255,251,240,.34) 100%)',
       badgeBg: 'linear-gradient(145deg, #FBEFE2, #F7E3CF)', badgeBorder: '#C98A4B', icon: '#8B3A3A',
       svg: evIcon('<ellipse cx="12" cy="15.2" rx="7.4" ry="2.1"/><path d="M4.6 15.2Q12 19.4 19.4 15.2"/>' +
         '<rect x="10.5" y="10.6" width="3" height="1.5" rx=".6" fill="currentColor" stroke="none"/>' +
@@ -717,7 +717,7 @@
       border: 'rgba(212,175,55,.4)',
       bg: 'linear-gradient(180deg, #FDF6FB 0%, #F7ECF5 100%)',
       photo: 'assets/images/sangeet-theme.jpg',
-      photoOverlay: 'linear-gradient(180deg, rgba(14,10,16,.52) 0%, rgba(12,8,14,.7) 35%, rgba(12,8,14,.72) 65%, rgba(10,7,12,.86) 100%)',
+      photoOverlay: 'linear-gradient(180deg, rgba(12,8,14,.4) 0%, rgba(10,7,12,.46) 50%, rgba(10,7,12,.58) 100%)',
       lightText: true, label: '#F0D9A8', value: '#FFF6E8', text: 'rgba(255,245,232,.92)', themeVal: '#F0CB63',
       badgeBg: 'linear-gradient(145deg, #2E1F35, #4A2F52)', badgeBorder: '#D4AF37', icon: '#E8D5A0',
       svg: evIcon('<circle cx="12" cy="12" r="6.4"/><path d="M5.6 12h12.8M12 5.6v12.8M7.7 7.7l8.6 8.6M16.3 7.7l-8.6 8.6" stroke-width=".8" opacity=".55"/>' +
@@ -729,7 +729,7 @@
       border: 'rgba(145,130,210,.35)',
       bg: 'linear-gradient(180deg, #F8F7FF 0%, #F1EEFC 100%)',
       photo: 'assets/images/haldi-theme.jpg',
-      photoOverlay: 'linear-gradient(180deg, rgba(248,247,255,.8) 0%, rgba(248,247,255,.42) 35%, rgba(248,247,255,.44) 65%, rgba(248,247,255,.82) 100%)',
+      photoOverlay: 'linear-gradient(180deg, rgba(248,247,255,.3) 0%, rgba(248,247,255,.22) 50%, rgba(248,247,255,.34) 100%)',
       badgeBg: 'linear-gradient(145deg, #ECE9FB, #E3DEF7)', badgeBorder: '#B9A8E6', icon: '#D4A017',
       svg: evIcon('<path d="M8.4 10.2h7.2l-1.1 7a1 1 0 0 1-1 .84h-3a1 1 0 0 1-1-.84l-1.1-7Z"/>' +
         '<path d="M9.5 10.2V8a2.5 2.5 0 0 1 5 0v2.2"/><path d="M7 10.2h10"/>' +
@@ -741,7 +741,7 @@
       border: 'rgba(90,120,70,.35)',
       bg: 'linear-gradient(180deg, #F8FBF3 0%, #EFF6E6 100%)',
       photo: 'assets/images/mehendi-theme.jpg',
-      photoOverlay: 'linear-gradient(180deg, rgba(248,251,243,.8) 0%, rgba(248,251,243,.42) 35%, rgba(248,251,243,.44) 65%, rgba(248,251,243,.82) 100%)',
+      photoOverlay: 'linear-gradient(180deg, rgba(248,251,243,.3) 0%, rgba(248,251,243,.22) 50%, rgba(248,251,243,.34) 100%)',
       badgeBg: 'linear-gradient(145deg, #E9F2DF, #DCEBD0)', badgeBorder: '#8FAE78', icon: '#6B4A2A',
       svg: evIcon('<path d="M9.2 5.6 15 8.4 12 18.4 9 8.4Z"/>' +
         '<path d="M12 13.4c1.5 1.3 1.5 3.1 0 4.4-1.5-1.3-1.5-3.1 0-4.4Z" fill="currentColor" stroke="none" opacity=".85"/>' +
@@ -753,7 +753,7 @@
       border: 'rgba(139,58,58,.4)',
       bg: 'linear-gradient(180deg, #FFFDF7 0%, #FBF0E0 100%)',
       photo: 'assets/images/wedding-theme.jpg',
-      photoOverlay: 'linear-gradient(180deg, rgba(255,253,247,.8) 0%, rgba(255,253,247,.42) 35%, rgba(255,253,247,.44) 65%, rgba(255,253,247,.82) 100%)',
+      photoOverlay: 'linear-gradient(180deg, rgba(255,253,247,.3) 0%, rgba(255,253,247,.22) 50%, rgba(255,253,247,.34) 100%)',
       badgeBg: 'linear-gradient(145deg, #3E2A1A, #1F150D)', badgeBorder: '#D4AF37', icon: '#E8D5A0',
       svg: evIcon('<path d="M5.6 18.6V9.4a6.4 6.4 0 0 1 12.8 0v9.2"/><path d="M5 18.6h14"/>' +
         '<path d="M12 2.6v1.8M12 4.4l1.6.9" />')
@@ -781,6 +781,8 @@
       art.classList.add('pr-ev-' + ev.id);
       art.style.background = theme.bg;
       if (theme.photo) {
+        art.classList.add('pr-ev-photo');
+        if (theme.lightText) art.classList.add('pr-ev-light-text');
         if (io) { art.__prTheme = theme; io.observe(art); } else { applyPhoto(art, theme); }
       }
       art.style.borderColor = theme.border;
