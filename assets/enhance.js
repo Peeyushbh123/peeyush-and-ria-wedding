@@ -333,8 +333,12 @@
       var ring = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
       ring.setAttribute('class', 'pr-seal-ring'); ring.setAttribute('viewBox', '0 0 206 206'); ring.setAttribute('aria-hidden', 'true');
       ring.innerHTML = '<defs><path id="prRingPath" d="M103 103m-82 0a82 82 0 1 1 164 0a82 82 0 1 1-164 0"/></defs>' +
-        '<text><textPath href="#prRingPath" textLength="506" lengthAdjust="spacing">SAVE THE DATE ✦ 14 · 15 · 16 FEBRUARY 2027 ✦ JAIPUR ✦ PEEYUSH &amp; RIA ✦ </textPath></text>';
+        '<text><textPath href="#prRingPath" textLength="506" lengthAdjust="spacing">' + ringText() + '</textPath></text>';
       box.insertBefore(glow2, box.firstChild); box.insertBefore(ring, box.firstChild);
+      onLangChange.push(function () {
+        var tp = ring.querySelector('textPath');
+        if (tp) tp.textContent = ringText();
+      });
     }
     if (!reduced) {
       var dust = document.createElement('div'); dust.className = 'pr-dust'; dust.setAttribute('aria-hidden', 'true');
@@ -505,6 +509,11 @@
   function isHindi() {
     var h = document.querySelector('main article h3');
     return !!h && /[\u0900-\u097F]/.test(h.textContent);
+  }
+  function ringText() {
+    return isHindi()
+      ? '\u0938\u0947\u0935 \u0926 \u0921\u0947\u091F \u2726 14 \u00B7 15 \u00B7 16 \u092B\u093C\u0930\u0935\u0930\u0940 2027 \u2726 \u091C\u092F\u092A\u0941\u0930 \u2726 \u092A\u0940\u092F\u0942\u0937 \u0914\u0930 \u0930\u093F\u092F\u093E \u2726 '
+      : 'SAVE THE DATE \u2726 14 \u00B7 15 \u00B7 16 FEBRUARY 2027 \u2726 JAIPUR \u2726 PEEYUSH & RIA \u2726 ';
   }
 
   var lastLang = 'en';
