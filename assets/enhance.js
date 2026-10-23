@@ -690,6 +690,11 @@
       img.loading = 'lazy';
       wrap.appendChild(img);
       card.appendChild(wrap);
+      var h3 = card.querySelector('h3');
+      if (h3) {
+        var top = h3.offsetTop + h3.offsetHeight / 2 - wrap.offsetHeight / 2;
+        wrap.style.top = Math.max(14, Math.round(top)) + 'px';
+      }
     });
   }
 
