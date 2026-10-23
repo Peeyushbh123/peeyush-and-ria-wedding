@@ -1014,6 +1014,7 @@
     canvas.addEventListener('pointerup', stop);
     canvas.addEventListener('pointercancel', stop);
     canvas.addEventListener('pointerleave', stop);
+    onLangChange.push(function () { if (!revealed && W && H) draw(); });
   }
 
   function setupScratchSection(main) {
