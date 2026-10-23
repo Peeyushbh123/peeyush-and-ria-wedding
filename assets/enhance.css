@@ -104,25 +104,33 @@ main div.justify-center.gap-3.py-1 > div.rounded-full { animation: prBob 4.5s ea
   border: 1px solid rgba(232,213,160,.6); box-shadow: inset 0 1px 0 rgba(255,255,255,.8), 0 14px 30px rgba(62,74,51,.14);
 }
 .pr-scratch-reveal { display: block; }
-.pr-ev-icon { width: 20px; height: 20px; display: block; }
+.pr-ev-photo:not(.pr-ev-light-text) { --label: #3A3326; }
 .pr-ev-photo:not(.pr-ev-light-text) h3,
 .pr-ev-photo:not(.pr-ev-light-text) p,
 .pr-ev-photo:not(.pr-ev-light-text) .small-caps {
-  text-shadow: 0 1px 2px rgba(255,255,255,.9), 0 0 14px rgba(255,255,255,.75), 0 0 2px rgba(255,255,255,.9);
+  font-weight: 700;
+  text-shadow: 0 1px 2px rgba(255,255,255,.95), 0 0 16px rgba(255,255,255,.85), 0 0 3px rgba(255,255,255,.95);
 }
+.pr-ev-photo:not(.pr-ev-light-text) h3 { color: #28311F !important; }
+.pr-ev-photo:not(.pr-ev-light-text) p[class*="text-[#6B6355]"] { color: #3A3326 !important; }
+.pr-ev-photo:not(.pr-ev-light-text) p[class*="text-[#3E4A33]"] { color: #28311F !important; }
+.pr-ev-photo:not(.pr-ev-light-text) p[class*="text-[#B8952F]"] { color: #7A5A12 !important; }
+.pr-ev-photo:not(.pr-ev-light-text) .small-caps { font-weight: 800; }
 .pr-ev-photo.pr-ev-light-text h3,
 .pr-ev-photo.pr-ev-light-text p,
 .pr-ev-photo.pr-ev-light-text .small-caps {
-  text-shadow: 0 1px 3px rgba(0,0,0,.75), 0 0 14px rgba(0,0,0,.55), 0 0 2px rgba(0,0,0,.6);
+  font-weight: 700;
+  text-shadow: 0 1px 3px rgba(0,0,0,.8), 0 0 16px rgba(0,0,0,.6), 0 0 3px rgba(0,0,0,.7);
 }
+.pr-ev-photo.pr-ev-light-text .small-caps { font-weight: 800; }
 .pr-couple-photo-wrap {
-  position: relative; width: 104px; height: 104px; margin: 0 auto 14px;
-  border-radius: 50%; padding: 3px; z-index: 10;
+  position: absolute; top: 16px; right: 16px; width: 76px; height: 76px;
+  border-radius: 50%; padding: 2.5px; z-index: 10;
   background: linear-gradient(145deg, #D4AF37, #B8952F, #E8D5A0);
-  box-shadow: 0 8px 20px rgba(62,74,51,.18);
+  box-shadow: 0 6px 16px rgba(62,74,51,.22);
 }
 .pr-couple-photo-wrap::after {
-  content: ""; position: absolute; inset: -5px; border-radius: 50%;
+  content: ""; position: absolute; inset: -4px; border-radius: 50%;
   border: 1px dashed rgba(184,149,47,.45); pointer-events: none;
 }
 .pr-couple-photo {
