@@ -447,17 +447,6 @@
     runOpen(300);
   }
 
-  function replayReveal() {
-    if (revealActive && !revealDone) return;   // a reveal is currently mid-animation, ignore repeat taps
-    clearInterval(sparkTimer); clearTimeout(exitTimer);
-    revealActive = false; revealDone = false; canSkip = false;
-    if (rv && rv.parentNode) rv.parentNode.removeChild(rv);
-    if (wave && wave.parentNode) wave.parentNode.removeChild(wave);
-    if (crack && crack.parentNode) crack.parentNode.removeChild(crack);
-    rv = null; wave = null; crack = null;
-    startReveal();
-  }
-
   /* shared "the page is now visible" sequence */
   var opened = false;
   function runOpen(delay) {
@@ -606,7 +595,6 @@
     add: ['＋ Add', '＋ जोड़ें'],
     all: ['Add all 5 events', 'सभी 5 कार्यक्रम जोड़ें'],
     share: ['Share invitation', 'निमंत्रण साझा करें'],
-    replay: ['↻ Replay invitation', '↻ निमंत्रण फिर से देखें'],
     rsvp: ['RSVP on WhatsApp', 'व्हाट्सऐप पर RSVP करें'],
     copied: ['Link copied', 'लिंक कॉपी हो गया'],
     addTitle: ['Download calendar file', 'कैलेंडर फ़ाइल डाउनलोड करें'],
@@ -665,9 +653,6 @@
     var sh = mk('button', 'pr-btn pr-btn-ghost pr-btn-block', '↗ ' + T('share'), { type: 'button' });
     sh.addEventListener('click', shareInvite);
     row2.appendChild(sh);
-    var rp = mk('button', 'pr-btn pr-btn-ghost pr-btn-block', T('replay'), { type: 'button' });
-    rp.addEventListener('click', replayReveal);
-    row2.appendChild(rp);
     if (RSVP_WHATSAPP) {
       var rs = mk('a', 'pr-btn pr-btn-ghost pr-btn-block', '✉ ' + T('rsvp'), {
         href: 'https://wa.me/' + String(RSVP_WHATSAPP).replace(/\D/g, '') + '?text=' + encodeURIComponent(T('rsvpText')),
