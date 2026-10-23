@@ -744,7 +744,7 @@
     function applyPhoto(art, theme) {
       art.style.backgroundColor = theme.swatch;
       art.style.backgroundImage = theme.photoOverlay + ', url(' + theme.photo + ')';
-      art.style.backgroundSize = 'cover, contain';
+      art.style.backgroundSize = 'cover, cover';
       art.style.backgroundPosition = 'center, center';
       art.style.backgroundRepeat = 'no-repeat, no-repeat';
     }
