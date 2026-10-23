@@ -788,6 +788,56 @@
   }
 
   /* =============================================================
+     VENUE MAP — a real, lazy-loaded Google Maps embed on the Venue card
+     ============================================================= */
+  var VENUE_MAP_QUERY = 'JHARKHAND+PALACE+WEDDING+RESORT+Opposite+Vinayak+City+Sirsi+Road+Bindayaka+Jaipur+302041';
+  function findFullAddressBox(venueSec) {
+    var ps = venueSec.querySelectorAll('p.small-caps');
+    for (var i = 0; i < ps.length; i++) {
+      var t = ps[i].textContent.trim();
+      if (t === 'Full Address' || t === 'पूरा पता') return ps[i].parentNode;
+    }
+    return null;
+  }
+  function setupVenueMap() {
+    if (document.querySelector('.pr-venue-map')) return;
+    var venueSec = findVenueSection();
+    if (!venueSec) return;
+    var box = findFullAddressBox(venueSec);
+    if (!box || !box.parentNode) return;
+    var wrap = document.createElement('div');
+    wrap.className = 'pr-venue-map';
+    var ph = document.createElement('div');
+    ph.className = 'pr-venue-map-ph';
+    ph.textContent = isHindi() ? 'मानचित्र लोड हो रहा है…' : 'Loading map…';
+    wrap.appendChild(ph);
+    box.parentNode.insertBefore(wrap, box);
+    onLangChange.push(function () {
+      if (wrap.querySelector('.pr-venue-map-ph')) ph.textContent = isHindi() ? 'मानचित्र लोड हो रहा है…' : 'Loading map…';
+    });
+    var io = ('IntersectionObserver' in window) ? new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        var iframe = document.createElement('iframe');
+        iframe.src = 'https://www.google.com/maps?q=' + VENUE_MAP_QUERY + '&output=embed';
+        iframe.loading = 'lazy';
+        iframe.setAttribute('allowfullscreen', '');
+        iframe.setAttribute('referrerpolicy', 'no-referrer-when-downgrade');
+        iframe.title = 'Jharkhand Palace And Resort — map location';
+        wrap.innerHTML = '';
+        wrap.appendChild(iframe);
+        io.unobserve(wrap);
+      });
+    }, { rootMargin: '300px 0px' }) : null;
+    if (io) io.observe(wrap); else {
+      var iframe2 = document.createElement('iframe');
+      iframe2.src = 'https://www.google.com/maps?q=' + VENUE_MAP_QUERY + '&output=embed';
+      iframe2.title = 'Jharkhand Palace And Resort — map location';
+      wrap.innerHTML = ''; wrap.appendChild(iframe2);
+    }
+  }
+
+  /* =============================================================
      QUICK NAV — a small floating menu to jump straight to any section
      ============================================================= */
   var STR_NAV = {
@@ -1038,6 +1088,7 @@
         setupReveals(); setupTilt(); setupCountdown(); watchOpen(main);
         setupCouplePhotos(main);
         setupEventThemes(main);
+        setupVenueMap();
         setupNav(main);
         setupLanguage();
       } else if (tries > 80) { clearInterval(t); }
