@@ -24,8 +24,8 @@
       whenEn: '14 Feb · 7:00 PM',  whenHi: '14 फरवरी · शाम 7:00 बजे' },
     { id: 'haldi',   en: 'Haldi',           hi: 'हल्दी',         d: [2027, 2, 15, 11, 0], mins: 180,
       whenEn: '15 Feb · 11:00 AM', whenHi: '15 फरवरी · सुबह 11:00 बजे' },
-    { id: 'mehendi', en: 'Mehendi',         hi: 'मेहँदी',        d: [2027, 2, 15, 19, 0], mins: 240,
-      whenEn: '15 Feb · 7:00 PM',  whenHi: '15 फरवरी · शाम 7:00 बजे' },
+    { id: 'mehendi', en: 'Mehendi',         hi: 'मेहँदी',        d: [2027, 2, 15, 16, 0], mins: 240,
+      whenEn: '15 Feb · 4:00 PM',  whenHi: '15 फरवरी · शाम 4:00 बजे' },
     { id: 'wedding', en: 'Royal Wedding',   hi: 'शुभ विवाह',     d: [2027, 2, 16, 18, 0], mins: 360,
       whenEn: '16 Feb · 6:00 PM',  whenHi: '16 फरवरी · शाम 6:00 बजे' }
   ];
@@ -595,7 +595,7 @@
     add: ['＋ Add', '＋ जोड़ें'],
     all: ['Add all 5 events', 'सभी 5 कार्यक्रम जोड़ें'],
     share: ['Share invitation', 'निमंत्रण साझा करें'],
-    rsvp: ['RSVP on WhatsApp', 'व्हाट्सऐप पर RSVP करें'],
+    rsvp: ['RSVP on WhatsApp', 'व्हाट्सऐप पर आरएसवीपी करें'],
     copied: ['Link copied', 'लिंक कॉपी हो गया'],
     addTitle: ['Download calendar file', 'कैलेंडर फ़ाइल डाउनलोड करें'],
     gTitle: ['Add to Google Calendar', 'Google कैलेंडर में जोड़ें'],
@@ -845,7 +845,7 @@
     hero: ['Welcome', 'स्वागत'],
     couple: ['The Couple', 'वर-वधू'],
     venue: ['Venue', 'स्थल'],
-    rsvp: ['Save the Date & RSVP', 'तारीख व RSVP']
+    rsvp: ['Save the Date & RSVP', 'तारीख व आरएसवीपी']
   };
   function navLabel(key) { return STR_NAV[key][isHindi() ? 1 : 0]; }
 
